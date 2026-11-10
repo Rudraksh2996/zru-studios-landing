@@ -712,7 +712,6 @@ const dogGroup = new THREE.Group();
 /* ---------- photoreal characters: image-to-3D meshes generated with Higgsfield (Tripo/Hunyuan), embedded as GLB ---------- */
 const GLBS = { person: '/design-assets/1dd5a833d3c40e8dab2103508da2c0c8791375a656d7750ef5dd82104793d6bf.bin', dog: '/design-assets/00de2ffc1b5d4aece95bb1b4e2fddb51d063111c889b4f399e94b3f58ca47fec.bin' };
 const characters = [];
-function b64ToBuf(b64) { const bin = atob(b64); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); return u8.buffer; }
 
 /* GLTFLoader loads a GLB's embedded images by wrapping each one in a Blob and handing
    URL.createObjectURL(...) to an <img>. Inside the desktop preview that call is shimmed
@@ -1135,7 +1134,7 @@ function makeCRT(g, w, h, d, style, ctex, i) {
 
 /* ================= CRT portfolio: seven sites / demos drawn on canvases ================= */
 const PORTFOLIO = [
-  { title: 'Halide Launch', kind: 'Website · Event', desc: 'Real-time summit site with live schedule and ticket drop.', draw(g, w, h, t) {
+  { title: 'Luminary Dashboard', kind: 'Web App · Visual study', desc: 'An illustrative interface study for the studio portfolio.', draw(g, w, h, t) {
     g.fillStyle = '#070707'; g.fillRect(0, 0, w, h);
     g.fillStyle = '#e6e6e6'; g.font = '700 14px "Geist"'; g.textBaseline = 'top'; g.textAlign = 'left'; g.fillText('halide', 24, 18); g.font = '600 11px "Geist"'; g.fillStyle = '#9a9a9a'; ['Schedule', 'Speakers', 'Tickets', 'Venue'].forEach((s, i) => g.fillText(s, 300 + i * 74, 20)); g.fillStyle = '#ff4d00'; g.fillRect(24, 40, w - 48, 1);
     g.fillStyle = '#e6e6e6'; g.font = '700 74px "Geist"'; g.fillText('LAUNCH', 22, 62); g.fillText("'26", 22, 134); g.fillStyle = '#ff4d00'; g.font = '600 13px "Geist Mono"'; g.fillText('SEP 24 — SAN FRANCISCO', 24, 220);
@@ -1145,7 +1144,7 @@ const PORTFOLIO = [
     g.restore();
     const cx = 420 + Math.sin(t * 0.7) * 120, cy = 150 + Math.cos(t * 0.9) * 40; g.fillStyle = '#fff'; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + 12, cy + 10); g.lineTo(cx + 5, cy + 11); g.lineTo(cx + 2, cy + 18); g.closePath(); g.fill();
   } },
-  { title: 'Lumenary', kind: 'Website · Product launch', desc: 'Story-driven launch site for a first hardware release.', draw(g, w, h, t) {
+  { title: 'Orbit SaaS Platform', kind: 'UI/UX · Visual study', desc: 'An illustrative product interface study.', draw(g, w, h, t) {
     const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#f6f0e8'); gr.addColorStop(1, '#e2d8cc'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
     g.strokeStyle = 'rgba(255,255,255,0.5)'; g.lineWidth = 18; for (let x = -200; x < w + 200; x += 70) { g.beginPath(); g.moveTo(x, h); g.lineTo(x + 240, 0); g.stroke(); }
     g.fillStyle = '#141414'; g.font = '600 12px "Geist"'; g.textBaseline = 'top'; g.textAlign = 'left'; g.fillText('lumenary', 24, 18); g.fillStyle = '#777'; ['Product', 'Story', 'Order'].forEach((s, i) => g.fillText(s, 450 + i * 58, 18));
@@ -1155,25 +1154,25 @@ const PORTFOLIO = [
     g.fillStyle = '#141414'; g.beginPath(); g.roundRect(350, 270, 130, 36, 18); g.fill(); g.fillStyle = '#fff'; g.font = '600 12px "Geist"'; g.fillText('Reserve — $299', 366, 281);
     const sx = ((t * 0.12) % 1.5 - 0.25) * w; const sg = g.createLinearGradient(sx - 120, 0, sx + 120, 0); sg.addColorStop(0, 'rgba(255,255,255,0)'); sg.addColorStop(0.5, 'rgba(255,255,255,0.45)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = sg; g.fillRect(0, 0, w, h);
   } },
-  { title: 'Kestrel Studios', kind: 'Website · Lookbook', desc: 'A seasonal lookbook turned into a browsable world.', draw(g, w, h, t) {
+  { title: 'Prism Design System', kind: 'System Design · Visual study', desc: 'An illustrative study in components, colour and type.', draw(g, w, h, t) {
     const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#6fa8e6'); gr.addColorStop(0.6, '#a9cdf2'); gr.addColorStop(1, '#dbe9f7'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
     const cloud = (x, y, r) => { for (let k = 0; k < 5; k++) { const rg = g.createRadialGradient(x + k * r * 0.5, y + (k % 2) * r * 0.2, 0, x + k * r * 0.5, y, r); rg.addColorStop(0, 'rgba(255,255,255,1)'); rg.addColorStop(0.5, 'rgba(255,255,255,0.9)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(x - r, y - r, r * 4, r * 2); } };
     cloud(60 + Math.sin(t * 0.2) * 30, 140, 60); cloud(330 + Math.cos(t * 0.15) * 40, 90, 50); cloud(480 + Math.sin(t * 0.25) * 25, 330, 70);
-    g.fillStyle = '#fff'; g.strokeStyle = '#1a2b4a'; g.lineWidth = 5; g.lineJoin = 'round'; g.font = '700 84px "Geist"'; g.textBaseline = 'top'; g.textAlign = 'left'; g.strokeText('KESTREL', 40, 170); g.fillText('KESTREL', 40, 170);
+    g.fillStyle = '#fff'; g.strokeStyle = '#1a2b4a'; g.lineWidth = 5; g.lineJoin = 'round'; g.font = '700 84px "Geist"'; g.textBaseline = 'top'; g.textAlign = 'left'; g.strokeText('PRISM', 40, 170); g.fillText('PRISM', 40, 170);
     g.font = '600 12px "Geist"'; g.fillStyle = '#1a2b4a'; g.fillText('SS26 LOOKBOOK — SCROLL TO EXPLORE', 44, 262);
     for (let i = 0; i < 5; i++) { const x = 40 + i * 116 - ((t * 30) % 116); g.fillStyle = ['#e36a3f', '#1a2b4a', '#f2c94c', '#8ab4d8', '#f0f0f0'][i]; g.fillRect(x, 300, 100, 140); g.fillStyle = 'rgba(0,0,0,0.35)'; g.fillRect(x, 410, 100, 30); g.fillStyle = '#fff'; g.font = '600 10px "Geist Mono"'; g.fillText('LOOK 0' + (i + 1), x + 8, 420); }
   } },
-  { title: 'Shop Moonrake', kind: 'Storefront', desc: 'A creator storefront that feels like the videos.', draw(g, w, h, t) {
+  { title: 'Template Design Study', kind: 'Lab · Template concept', desc: 'A playful storefront template experiment.', draw(g, w, h, t) {
     g.fillStyle = '#ff8fc4'; g.fillRect(0, 0, w, h);
     g.save(); g.translate(w / 2, h / 2); g.rotate(t * 0.15); for (let i = 0; i < 24; i++) { g.fillStyle = i % 2 ? '#ff5fae' : '#ffb1d6'; g.beginPath(); g.moveTo(0, 0); g.arc(0, 0, 700, i * Math.PI / 12, (i + 1) * Math.PI / 12); g.closePath(); g.fill(); } g.restore();
-    g.font = '700 82px "Geist"'; g.textBaseline = 'top'; g.textAlign = 'center'; g.lineJoin = 'round'; g.strokeStyle = '#1a1a1a'; g.lineWidth = 8; g.strokeText('Moonrake', w / 2, 60); g.fillStyle = '#ffe45c'; g.fillText('Moonrake', w / 2, 60);
+    g.font = '700 82px "Geist"'; g.textBaseline = 'top'; g.textAlign = 'center'; g.lineJoin = 'round'; g.strokeStyle = '#1a1a1a'; g.lineWidth = 8; g.strokeText('Templates', w / 2, 60); g.fillStyle = '#ffe45c'; g.fillText('Templates', w / 2, 60);
     g.fillStyle = '#7a4bff'; g.fillRect(200, 40, 90, 32); g.fillStyle = '#fff'; g.font = '700 18px "Geist"'; g.fillText('SHOP', 245, 46);
     for (let i = 0; i < 4; i++) { const x = 60 + i * 135, y = 200 + Math.sin(t * 2 + i) * 6; g.fillStyle = '#fff'; g.beginPath(); g.roundRect(x, y, 115, 150, 12); g.fill(); g.fillStyle = ['#ffe45c', '#1a1a1a', '#7a4bff', '#ff5fae'][i]; g.beginPath(); g.roundRect(x + 14, y + 14, 87, 80, 8); g.fill(); g.fillStyle = '#1a1a1a'; g.font = '700 12px "Geist"'; g.textAlign = 'left'; g.fillText(['HOODIE', 'TEE', 'CAP', 'DROP 04'][i], x + 14, y + 106); g.font = '600 11px "Geist"'; g.fillText('$' + [64, 32, 28, 89][i], x + 14, y + 124); g.textAlign = 'center'; }
     g.fillStyle = '#1a1a1a'; g.font = '700 13px "Geist Mono"'; g.fillText('NEW DROP IN ' + String(59 - Math.floor(t) % 60).padStart(2, '0') + ':' + String(59 - Math.floor(t * 7) % 60).padStart(2, '0'), w / 2, 400);
   } },
-  { title: 'Northwind Labs', kind: 'Product UI · Dashboard', desc: 'Operations console for a logistics platform.', draw(g, w, h, t) {
+  { title: 'Luminary Dashboard', kind: 'Product UI · Dashboard', desc: 'An illustrative dashboard interface study.', draw(g, w, h, t) {
     g.fillStyle = '#0b0d12'; g.fillRect(0, 0, w, h); g.fillStyle = '#10131a'; g.fillRect(0, 0, 150, h);
-    g.textBaseline = 'top'; g.textAlign = 'left'; g.fillStyle = '#e6e6e6'; g.font = '700 13px "Geist"'; g.fillText('northwind', 18, 18);
+    g.textBaseline = 'top'; g.textAlign = 'left'; g.fillStyle = '#e6e6e6'; g.font = '700 13px "Geist"'; g.fillText('luminary', 18, 18);
     ['Overview', 'Fleet', 'Routes', 'Alerts', 'Billing'].forEach((m, i) => { g.fillStyle = i === 1 ? '#1d2230' : 'transparent'; g.fillRect(10, 56 + i * 30, 130, 26); g.fillStyle = i === 1 ? '#fff' : '#8a8f9c'; g.font = '500 12px "Geist"'; g.fillText(m, 20, 62 + i * 30); });
     const card = (x, y, cw, ch, label, val, col) => { g.fillStyle = '#12161f'; g.beginPath(); g.roundRect(x, y, cw, ch, 8); g.fill(); g.fillStyle = '#8a8f9c'; g.font = '500 11px "Geist"'; g.fillText(label, x + 14, y + 12); g.fillStyle = col; g.font = '700 24px "Geist"'; g.fillText(val, x + 14, y + 30); };
     card(170, 20, 140, 70, 'Active vehicles', String(412 + Math.floor(Math.sin(t) * 6)), '#e6e6e6'); card(322, 20, 140, 70, 'On-time', (96.2 + Math.sin(t * 0.5) * 0.4).toFixed(1) + '%', '#5ee0a0'); card(474, 20, 140, 70, 'Alerts', String(3 + (Math.floor(t / 4) % 3)), '#ff4d00');
@@ -1191,12 +1190,12 @@ const PORTFOLIO = [
     g.fillStyle = '#ffb090'; g.font = '700 16px "Geist Mono"'; if (Math.floor(t * 2) % 2 === 0) g.fillText('PLAYABLE ON THE CABINET', cx, 300);
     for (let i = 0; i < 6; i++) { const ex = 80 + i * 96 + Math.sin(t * 2 + i) * 20, ey = 380 + Math.cos(t * 1.5 + i) * 10; g.fillStyle = '#ff4d00'; g.fillRect(ex, ey, 26, 26); g.fillStyle = '#12050a'; g.fillRect(ex + 6, ey + 8, 4, 6); g.fillRect(ex + 16, ey + 8, 4, 6); }
   } },
-  { title: 'Cobaltine', kind: 'Brand identity', desc: 'Visual identity and motion system for a data company.', draw(g, w, h, t) {
+  { title: 'Apex Brand Identity', kind: 'Brand identity', desc: 'An illustrative brand identity study.', draw(g, w, h, t) {
     g.fillStyle = '#1230d0'; g.fillRect(0, 0, w, h);
     g.strokeStyle = 'rgba(255,255,255,0.18)'; g.lineWidth = 1; for (let x = 0; x < w; x += 40) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); } for (let y = 0; y < h; y += 40) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
     g.save(); g.translate(200, 230); g.rotate(t * 0.3); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(0, -120); g.lineTo(104, 60); g.lineTo(-104, 60); g.closePath(); g.fill(); g.fillStyle = '#1230d0'; g.beginPath(); g.arc(0, 0, 40, 0, Math.PI * 2); g.fill(); g.restore();
-    g.fillStyle = '#fff'; g.textBaseline = 'top'; g.textAlign = 'left'; g.font = '700 64px "Geist"'; g.fillText('Cobaltine', 330, 150); g.font = '500 14px "Geist"'; g.fillText('DATA, MADE LEGIBLE.', 334, 222);
-    const off = (t * 60) % 400; g.font = '700 22px "Geist Mono"'; for (let i = -1; i < 3; i++) g.fillText('COBALTINE — IDENTITY 2026 —', i * 400 - off, 430);
+    g.fillStyle = '#fff'; g.textBaseline = 'top'; g.textAlign = 'left'; g.font = '700 64px "Geist"'; g.fillText('Apex Brand Identity', 330, 150); g.font = '500 14px "Geist"'; g.fillText('DATA, MADE LEGIBLE.', 334, 222);
+    const off = (t * 60) % 400; g.font = '700 22px "Geist Mono"'; for (let i = -1; i < 3; i++) g.fillText('APEX — IDENTITY 2026 —', i * 400 - off, 430);
   } },
 ];
 

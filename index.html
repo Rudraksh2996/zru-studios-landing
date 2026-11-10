@@ -5,14 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zru Studios | We build the stuff people remember.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="zru. is a digital studio & brand workshop building the stuff people remember. Design and development for ambitious brands.">
+<meta name="description" content="Zru Studios is a digital studio &amp; brand workshop building the stuff people remember. Design and development for ambitious brands.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
+<noscript><style>#canvas-container{display:none}#layout{margin-top:0}</style></noscript>
 </head>
 <body>
 
+<a class="skip-link" href="#top">Skip 3D lobby</a>
+<div id="lab" aria-hidden="true"></div>
 <div id="canvas-container">
   <canvas id="gl"></canvas>
   <div id="loader"><span>loading zru</span></div>
@@ -162,12 +165,12 @@
         <div class="cap framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
           <h3 class="f-h4" data-ps><a class="actionable" href="#showcase">UI/UX Design</a></h3>
           <p class="f-h4" data-ps>Intuitive interfaces users love. We shape user flows, wireframes and polished UI for digital products.</p>
-          <div class="tags f-p"><span>Visual Identity</span><span>Space Design</span><span>Keynote Design</span><span>Digital &amp; Interactive</span></div>
+          <div class="tags f-p"><span>Visual Identity</span><span>User Flows</span><span>Prototyping</span><span>Digital &amp; Interactive</span></div>
         </div>
         <div class="cap framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
           <h3 class="f-h4" data-ps><a class="actionable" href="#showcase">Template Designs</a></h3>
           <p class="f-h4" data-ps>Launch faster with crafted foundations: adaptable website templates, reusable components and design systems.</p>
-          <div class="tags f-p"><span>Campaign Content</span><span>Growth Experiments</span><span>Sales Materials</span></div>
+          <div class="tags f-p"><span>Templates</span><span>Components</span><span>Design Systems</span></div>
         </div>
       </div>
     </div>
@@ -257,7 +260,7 @@ https://github.com/Rudraksh2996</pre>
 
 
 
-<script type="module" src="/src/lobby.js"></script>
+<script type="module" src="/src/main.js"></script>
 <script src="/runtime/crt-runtime.js"></script>
 <script src="/runtime/button-runtime.js"></script>
 <script src="/runtime/gsap-runtime.js"></script>
