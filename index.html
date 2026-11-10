@@ -1,13 +1,268 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>zru-studios-landing</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head><script src="/runtime/storage-images.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zru Studios | We build the stuff people remember.</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="zru. is a digital studio & brand workshop building the stuff people remember. Design and development for ambitious brands.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/styles.css">
+</head>
+<body>
+
+<div id="canvas-container">
+  <canvas id="gl"></canvas>
+  <div id="loader"><span>loading zru</span></div>
+  <div id="hud" hidden><span class="score">SCORE 0 &nbsp;·&nbsp; SHOTS 0</span><span class="msg"></span></div>
+  <div id="hint"></div>
+  <div id="tvcap" hidden><span class="idx"></span><span class="ttl"></span><span class="desc"></span></div>
+</div>
+
+<nav id="topnav" class="f-nav" aria-label="Main">
+  <div class="pillbar">
+    <i class="ex ex-b" aria-hidden="true"></i>
+    <i class="frame" aria-hidden="true"></i>
+    <i class="glint" aria-hidden="true"></i>
+    <i class="cnr tl" aria-hidden="true"></i><i class="cnr tr" aria-hidden="true"></i><i class="cnr bl" aria-hidden="true"></i><i class="cnr br" aria-hidden="true"></i>
+    <a class="logo" href="#top" aria-label="Zru Studios"><span class="wordmark">zru studios<i>.</i></span></a>
+    <div class="center">
+      <a class="active blink" href="#top">Home</a>
+      <a class="blink" href="#showcase">Work</a>
+      <a class="blink" href="#services">Services</a>
+      <a class="blink" href="#lab">Lab</a>
+    </div>
+    <div class="right">
+      <button class="term arcade metal" id="termstatus" aria-pressed="false" title="Open the machine-readable view"><span class="led"></span><span class="prompt">agent@zru</span><span class="txt">online</span><span class="cur"></span></button>
+      <a class="icon mail blink arcade metal" href="https://github.com/Rudraksh2996" aria-label="Contact us" title="Contact us"><svg viewBox="0 0 20 20"><path d="M3 4.5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Zm.6 1.5 6.4 4.9L16.4 6H3.6ZM3.5 7.6v7.3h13V7.6L10 12.5 3.5 7.6Z"/></svg></a>
+      <button class="icon burger arcade metal" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="1.6" rx=".8"/><rect x="3" y="9.2" width="14" height="1.6" rx=".8"/><rect x="3" y="13.4" width="14" height="1.6" rx=".8"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+  <div class="menu" hidden>
+    <div id="paper-stage">
+      <div id="pp-dof"></div>
+      <canvas id="pp-gl"></canvas>
+      <div id="pp-grain"></div>
+      <div id="pp-grain2"></div>
+      <div id="pp-vig"></div>
+      <div id="pp-hint"><b>Drag</b> to turn it<span class="ptr"> &nbsp;·&nbsp; <b>Hover</b> to light it</span></div>
+    </div>
+    <button class="menu-close" type="button" aria-label="Close menu"><span class="wordmark">zru studios<i>.</i></span></button>
+    <nav class="menu-links" aria-label="Full menu">
+      <img crossorigin="anonymous" class="menu-ill" src="/design-assets/faffa858930f6901e16271424a7b32687d9d86dde0e5dbd7c305959f25eac76c.webp" alt="" aria-hidden="true">
+      <div class="menu-nav">
+        <a href="#top">Home</a><a href="#showcase">Work</a><a href="#services">Services</a><a href="#people">Contact</a><a href="#blog">Start a project</a><a href="#lab">Lab</a><a href="https://github.com/Rudraksh2996">Contact</a>
+      </div>
+      <div class="menu-foot">
+        <p><a href="https://github.com/Rudraksh2996">Rudraksh Sharma · GitHub</a></p>
+        <p>Design &amp; development</p>
+        <p>UI/UX · websites · branding</p>
+      </div>
+    </nav>
+  </div>
+
+<div id="layout">
+<div class="vrules" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<main>
+  <section class="grid-layout hero" id="top">
+    <img crossorigin="anonymous" class="ill ill-joystick" src="/design-assets/412e722ae63959b6c36871397c19599422ce4a51732d4e0fa0ded90e25cd3e6b.webp" alt="" aria-hidden="true">
+    <img crossorigin="anonymous" class="ill ill-lantern" src="/design-assets/faffa858930f6901e16271424a7b32687d9d86dde0e5dbd7c305959f25eac76c.webp" alt="" aria-hidden="true">
+    <img crossorigin="anonymous" class="ill ill-cat" src="/design-assets/985d9a577c6d076ab3833fbec7fc7b49b53957990ff81b2df65b642fa4f4c1e8.webp" alt="" aria-hidden="true">
+    <div class="eyebrow"><span>Zru Studios — studio index</span><hr class="rule" data-line><span>Design. Build. Launch.</span></div>
+    <article>
+      <div class="framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h1 class="f-h0" data-ps>A digital studio &amp; brand workshop building the stuff people remember</h1></div>
+      <div class="framed lede"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>We team up with ambitious founders, scale-ups and brands to turn strategy into products, identities and experiences that actually ship.</p></div>
+    </article>
+  </section>
+
+  <section class="grid-layout logos" id="showcase">
+    <div class="framed label"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h2 class="f-h3" data-ps>Made for ambitious brands</h2></div>
+    <hr class="rule" data-line>
+    <div class="grid">
+      <a href="#services" aria-label="UI/UX Design"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>UI/UX Design</span></div></a>
+      <a href="#services" aria-label="Web Design"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Web Design</span></div></a>
+      <a href="#services" aria-label="Graphic Design"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Graphic Design</span></div></a>
+      <a href="#services" aria-label="Template Designs"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Template Designs</span></div></a>
+      <a href="#services" aria-label="Website Building"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Website Building</span></div></a>
+      <a href="#services" aria-label="Design Systems"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Design Systems</span></div></a>
+      <a href="#services" aria-label="Discovery"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Discovery</span></div></a>
+      <a href="#services" aria-label="Design"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Design</span></div></a>
+      <a href="#services" aria-label="Development"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Development</span></div></a>
+      <a href="#services" aria-label="Launch"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Launch</span></div></a>
+      <a href="#services" aria-label="Responsive Layouts"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Responsive Layouts</span></div></a>
+      <a href="#services" aria-label="Brand Identity"><div class="cell with-dots"><div class="lines with-diagonal-lines"></div><span class="capability-word" data-ps>Brand Identity</span></div></a>
+    </div>
+  </section>
+
+  <div class="grid-layout featured" id="work">
+    <hr class="rule topline" data-line>
+    <div class="head">
+      <div class="framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h2 class="f-h1" data-ps>Featured Projects</h2></div>
+      <div class="framed sub"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>Selected projects from Zru Studios — interfaces, brand identities, digital products and design systems. Visuals are illustrative.</p></div>
+    </div>
+    <div class="masonry">
+      <article class="card">
+        <a class="shot" href="#work" aria-label="Apex Brand Identity" data-ps><img crossorigin="anonymous" alt="" src="/design-assets/5adbf9bcefb380aba42a0df8cd3ea7bc5d527adf89929b592d3fd2f90b3e5e88.jpg"></a>
+        <div class="meta framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p class="cats" data-ps>Branding</p>
+          <h3 class="f-h3" data-ps>Apex Brand Identity</h3>
+          <p class="desc f-p" data-ps>A visual identity exploring bold graphics and a consistent brand language.</p>
+          <a class="go f-p" href="#work" data-ps><span>View project</span><svg viewBox="0 0 20 20"><path d="m11.1075 14.2752 4.2763-4.29004-4.2625-4.2625h1.9112l4.2625 4.27625-4.2763 4.27629h-1.9112ZM2.5 10.8102V9.17391h13.8188v1.63629H2.5Z"/></svg></a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="shot" href="#work" aria-label="Orbit SaaS Platform" data-ps><img crossorigin="anonymous" alt="" src="/design-assets/fbdb9068cc5e30114983f8d1acf9d8ba3f4cb162b02ae6dc9908b0496f04f712.jpg"></a>
+        <div class="meta framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p class="cats" data-ps>UI/UX</p>
+          <h3 class="f-h3" data-ps>Orbit SaaS Platform</h3>
+          <p class="desc f-p" data-ps>A SaaS product interface combining considered user flows with adaptive layouts.</p>
+          <a class="go f-p" href="#work" data-ps><span>View project</span><svg viewBox="0 0 20 20"><path d="m11.1075 14.2752 4.2763-4.29004-4.2625-4.2625h1.9112l4.2625 4.27625-4.2763 4.27629h-1.9112ZM2.5 10.8102V9.17391h13.8188v1.63629H2.5Z"/></svg></a>
+        </div>
+      </article>
+      <article class="card">
+        <a class="shot" href="#work" aria-label="Prism Design System" data-ps><img crossorigin="anonymous" alt="" src="/design-assets/ca37589a8f31795e08e224131a89d70645c1aa561b55bdb118191f95ad503129.jpg"></a>
+        <div class="meta framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p class="cats" data-ps>System Design</p>
+          <h3 class="f-h3" data-ps>Prism Design System</h3>
+          <p class="desc f-p" data-ps>A reusable design system connecting components, typography and interface patterns.</p>
+          <a class="go f-p" href="#work" data-ps><span>View project</span><svg viewBox="0 0 20 20"><path d="m11.1075 14.2752 4.2763-4.29004-4.2625-4.2625h1.9112l4.2625 4.27625-4.2763 4.27629h-1.9112ZM2.5 10.8102V9.17391h13.8188v1.63629H2.5Z"/></svg></a>
+        </div>
+      </article>
+      
+      
+      
+      
+      
+    </div>
+  </div>
+
+  <div class="grid-layout caps" id="services">
+    <div class="framed label"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h2 class="f-h3" data-ps>Capabilities</h2></div>
+    <hr class="rule topline" data-line>
+    <div class="big f-h1 framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <p data-ps>We're here to make the extraordinary.</p>
+      <p data-ps>No shortcuts — just bold, precise work that raises the bar &amp; leaves a mark.</p>
+    </div>
+    <div class="cols">
+      <div class="inner">
+        <div class="cap framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3 class="f-h4" data-ps><a class="actionable" href="#showcase">Web Design &amp; Development</a></h3>
+          <p class="f-h4" data-ps>From pre-launch teasers to full redesigns, we design and engineer sites that earn attention and turn it into action.</p>
+          <div class="tags f-p"><span>Product Strategy</span><span>UX/UI Design</span><span>Engineering</span><span>3D &amp; Motion</span></div>
+        </div>
+        <div class="cap framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3 class="f-h4" data-ps><a class="actionable" href="#showcase">Graphic Design &amp; Branding</a></h3>
+          <p class="f-h4" data-ps>From lean identities for new companies to full brand platforms for category leaders, we build systems that scale without going stale.</p>
+          <div class="tags f-p"><span>Visual Identity</span><span>Brand Systems</span></div>
+        </div>
+        <div class="cap framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3 class="f-h4" data-ps><a class="actionable" href="#showcase">UI/UX Design</a></h3>
+          <p class="f-h4" data-ps>Intuitive interfaces users love. We shape user flows, wireframes and polished UI for digital products.</p>
+          <div class="tags f-p"><span>Visual Identity</span><span>Space Design</span><span>Keynote Design</span><span>Digital &amp; Interactive</span></div>
+        </div>
+        <div class="cap framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3 class="f-h4" data-ps><a class="actionable" href="#showcase">Template Designs</a></h3>
+          <p class="f-h4" data-ps>Launch faster with crafted foundations: adaptable website templates, reusable components and design systems.</p>
+          <div class="tags f-p"><span>Campaign Content</span><span>Growth Experiments</span><span>Sales Materials</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule grid-layout" data-line style="display:block;height:1px">
+  <div class="grid-layout contact" id="people">
+    <img crossorigin="anonymous" class="ill ill-crt" src="/design-assets/d94f18d869361c2ab12b4130a94a07712675049f46a0c5a287f588d6faa9e62a.webp" alt="" aria-hidden="true">
+    <div class="box framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="lines with-diagonal-lines"></div>
+      <h2 class="f-h3" data-ps>Contact</h2>
+      <p class="lead f-h1" data-ps>Let's build something loud.</p>
+      <div class="mail f-h1" data-ps><a href="https://github.com/Rudraksh2996"><span class="actionable">Let’s connect ↗</span></a></div>
+    </div>
+  </div>
+</main>
+
+<footer id="blog">
+  <div class="grid-layout"><hr class="rule" data-line style="grid-column:1/-1"></div>
+
+  <div class="grid-layout fcard-wrap">
+    <div class="fcard framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <p class="tag">Your next project</p>
+      <h3 class="f-h2" data-ps>Have an idea in mind?</h3>
+      <p class="sub f-h4" data-ps>Write a quick brief and copy it to share with your team.</p>
+      <form class="signup" novalidate>
+        <input type="text" name="brief" placeholder="Tell us what you want to build" aria-label="Project brief" required maxlength="2000">
+        <div class="threeui-page-button-stage threeui-page-button-stage--ember-keycap" data-mode="dark" data-variant="ember-keycap">
+          <span class="threeui-page-button-ember-wrap">
+            <button class="threeui-page-button threeui-page-button--ember-keycap" type="submit">
+              <svg class="threeui-page-button__spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L61 39 L96 50 L61 61 L50 96 L39 61 L4 50 L39 39 Z" /></svg>
+              <span class="lbl">Copy brief</span>
+              <span class="threeui-page-button__price">Let’s build</span>
+            </button>
+            <span class="threeui-page-button-ember-glow" aria-hidden="true"></span>
+            <span class="threeui-page-button-ember-bloom" aria-hidden="true"></span>
+          </span>
+        </div>
+      </form>
+      <p class="fine"><span id="brief-status" role="status" aria-live="polite">Your brief stays in your browser until you copy it.</span></p>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <div class="mark"><svg viewBox="0 0 1673 149" xmlns="http://www.w3.org/2000/svg" aria-label="ZRU STUDIOS.26"><text x="0" y="140" textLength="1673" lengthAdjust="spacingAndGlyphs" font-family="Geist, 'Geist Fallback', Arial, sans-serif" font-weight="500" font-size="196" letter-spacing="-6">ZRU STUDIOS.26</text></svg></div>
+  </div>
+
+  <div class="grid-layout bottom">
+    <div class="links f-h3"><a class="blink" href="#top">Home</a><a class="blink" href="#services">Services</a><a class="blink" href="#showcase">Showcase</a><a class="blink" href="#people">Contact</a><a class="blink" href="#blog">Start a project</a><a class="blink" href="#lab">Lab</a><a class="blink" href="https://github.com/Rudraksh2996">Contact Us</a></div>
+    <div class="social"><a href="https://github.com/Rudraksh2996" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.2a7.8 7.8 0 0 0-2.5 15.2c.4.07.54-.17.54-.38v-1.5c-2.2.44-2.66-.94-2.66-.94-.36-.92-.88-1.16-.88-1.16-.72-.5.05-.48.05-.48.8.06 1.22.82 1.22.82.7 1.22 1.86.87 2.32.66.07-.52.28-.87.5-1.07-1.75-.2-3.6-.88-3.6-3.92 0-.87.31-1.58.82-2.13-.08-.2-.36-1.01.08-2.11 0 0 .67-.21 2.2.81a7.6 7.6 0 0 1 4 0c1.53-1.02 2.2-.81 2.2-.81.44 1.1.16 1.91.08 2.11.51.55.82 1.26.82 2.13 0 3.05-1.86 3.72-3.63 3.91.29.25.54.73.54 1.47v2.18c0 .21.14.46.55.38A7.8 7.8 0 0 0 10 2.2Z"/></svg></a></div>
+    <p class="copy f-p">© Zru Studios 2026 all rights reserved</p>
+  </div>
+</footer>
+</div>
+
+<div id="machine-scrim" aria-hidden="true"></div>
+<div id="machine-scan" aria-hidden="true"></div>
+<div id="machine" aria-label="Machine-readable index">
+  <div id="crt-host"></div>
+  <button id="machine-close" class="f-nav">[esc] close</button>
+  <pre class="sr-only">ZRU STUDIOS :: STUDIO INDEX
+
+NAME .......... Zru Studios
+CREATOR ....... Rudraksh Sharma
+SERVICES ...... UI/UX Design, Web Design, Graphic Design,
+                Template Designs, Website Building
+
+We design and build exceptional digital experiences for ambitious
+brands worldwide.
+
+SELECTED WORK
+- Luminary Dashboard / Web App
+- Apex Brand Identity / Branding
+- Orbit SaaS Platform / UI/UX
+- Prism Design System / System Design
+
+LAB
+- Zru Studios Defender: click the arcade cabinet.
+- ZRU Shot: click the basketball backboard.
+
+PUBLIC PROFILE
+https://github.com/Rudraksh2996</pre>
+</div>
+
+<canvas id="vhs-overlay" aria-hidden="true"></canvas>
+
+
+
+
+<script type="module" src="/src/lobby.js"></script>
+<script src="/runtime/crt-runtime.js"></script>
+<script src="/runtime/button-runtime.js"></script>
+<script src="/runtime/gsap-runtime.js"></script>
+<script src="/runtime/particle-scroll.js"></script>
+<script src="/runtime/terrain-plume.js"></script>
+<script src="/runtime/page.js"></script>
+</body>
 </html>
