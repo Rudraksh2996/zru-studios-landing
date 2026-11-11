@@ -32,10 +32,11 @@ test('render budget is bounded from tiny screens through 8K at high DPI', () => 
   assert.equal(renderSize(0,0).width, 1);
 });
 
-test('portrait camera framing expands without moving landscape framing', () => {
+test('portrait framing preserves wide views and basketball shot geometry', () => {
   for (const mode of ['home','arcade','hoop','tv']) {
     assert.equal(framingScale(2,mode), 1);
-    assert(framingScale(.4,mode) > 1);
+    if (mode === 'hoop') assert.equal(framingScale(.4,mode), 1);
+    else assert(framingScale(.4,mode) > 1);
     assert(framingScale(.01,mode) <= 3.5);
   }
 });

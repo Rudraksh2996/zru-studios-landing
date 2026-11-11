@@ -145,6 +145,9 @@ body:is(.menu-open, .machine) .graphics-toggle { display: none; }
   #topnav .pillbar { padding-inline: 8px; gap: 4px; }
   .logos .grid { grid-template-columns: minmax(0, 1fr); }
 }
+@media (max-width: 280px) {
+  #topnav .term { display: none; }
+}
 @media (max-height: 500px) and (orientation: landscape) {
   #hint { display: none; }
   #tvcap { bottom: calc(76px + var(--safe-bottom)); max-width: 40%; padding: 6px; }

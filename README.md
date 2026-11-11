@@ -9,7 +9,8 @@ Built with vanilla JavaScript, Three.js and Vite. The visual experience adapts t
 ## Features
 
 - **Interactive 3D lobby:** a detailed environment with animated lighting, reactive props and canvas-based screen artwork.
-- **Playable experiences:** an arcade cabinet, basketball shooting and browsable CRT project screens.
+- **Playable experiences:** an arcade cabinet, basketball shooting and browsable CRT project screens, with visible touch and keyboard controls.
+- **Adaptive graphics:** portrait camera framing, a bounded render resolution, reduced effects on touch devices, and a lighter view for devices that cannot comfortably run the scene.
 - **Studio portfolio:** Luminary Dashboard, Apex Brand Identity, Orbit SaaS Platform and Prism Design System.
 - **Service overview:** UI/UX design, web design, graphic design, template design and website development.
 - **Motion effects:** particle transitions, a CRT studio index, animated buttons and a terrain effect behind the footer.
@@ -56,23 +57,26 @@ Open the local URL printed by Vite. No environment variables are required.
 | `npm ci` | Install the dependency versions recorded in `package-lock.json`. |
 | `npm run dev` | Start the development server with live updates. |
 | `npm run check` | Verify source syntax, assets, navigation and studio content. |
+| `npm test` | Run input, dialog, viewport and control lifecycle regression tests. |
 | `npm run build` | Generate the production site in `dist/`. |
 | `npm run preview` | Serve the production build locally for inspection. |
 
 ## Exploring the lobby
 
-Click an interactive object to enter its mode.
+Choose **Arcade**, **Basketball** or **Project screens** in the lobby toolbar, or select the corresponding 3D object. On a touch screen, the home lobby allows vertical scrolling; a swipe does not activate an object.
 
 | Experience | Controls |
 | --- | --- |
-| Arcade cabinet | Click the cabinet; use **Space** to start and fire. Move with **Left/Right arrows** or **A/D**. |
-| Basketball | Click the hoop, then drag upward and release to shoot. **Space** also takes a shot. |
-| CRT project screens | Click a screen. Use the **arrow keys** to browse, or click another screen. |
-| Exit a lobby experience | Press **Escape**. |
+| Arcade cabinet | Click the cabinet; use **Space** to start and fire. Move with **Left/Right arrows** or **A/D**. On touch screens, hold the on-screen arrows and **Fire** buttons; movement and firing support simultaneous touches. |
+| Basketball | Click the hoop, then drag upward and release to shoot. **Space** or the on-screen **Shoot** button also takes a shot. |
+| CRT project screens | Click a screen. Use the **arrow keys** to browse, select **Previous/Next**, or click another screen. |
+| Exit a lobby experience | Select **Exit experience** or press **Escape**. |
 | Studio index | Select the status chip in the header. Press **Escape** to close it. |
 | Navigation menu | Open the menu from the header; select a link or press **Escape** to close it. |
 
-Use **Skip 3D lobby** when navigating by keyboard to jump to the page content.
+Use **Skip 3D lobby** when navigating by keyboard to jump to the page content. **Use lighter view** reloads the page with `?graphics=off`, bypassing the lobby and GPU effects. **Enable 3D lobby** returns to the regular view.
+
+Navigation and studio-index dialogs trap keyboard focus, make background content inert and restore focus on close. Small screens and reduced-motion settings use a readable, scrollable text studio index.
 
 ## Project structure
 
@@ -82,7 +86,12 @@ zru-studios-landing/
 ├── src/
 │   ├── main.js                 # Scene entry point and WebGL fallback
 │   ├── lobby.js                # Three.js scene, games and interactive props
-│   └── styles.css              # Visual system and responsive styles
+│   ├── styles.css              # Original visual system
+│   ├── responsive.css          # Fluid layouts, safe areas and control sizing
+│   ├── input.js                # Held inputs, gestures and render budgets
+│   ├── controls.js             # Touch and keyboard lobby controls
+│   ├── dialog.js               # Focus management and modal isolation
+│   └── interface.js            # Navigation and studio-index dialogs
 ├── public/
 │   ├── favicon.svg             # Studio icon
 │   ├── design-assets/          # Images and GLB character models (.bin files)
@@ -96,6 +105,9 @@ zru-studios-landing/
 │       └── storage-images.js
 ├── scripts/
 │   └── check.mjs               # Source and asset verification
+├── tests/
+│   ├── responsive.test.mjs      # Input, dialog and viewport regressions
+│   └── controls.html            # Browser fixture using production controls
 ├── package.json
 ├── package-lock.json
 └── vite.config.js
@@ -108,9 +120,11 @@ Vite copies `public/` into the production output. Keep the browser runtime scrip
 | Change | Where to edit |
 | --- | --- |
 | Page title, description, navigation, projects and services | `index.html` |
-| Colours, typography, spacing and responsive behaviour | `src/styles.css` |
+| Colours, typography and base visual design | `src/styles.css` |
+| Fluid layouts, safe areas and responsive behaviour | `src/responsive.css` |
+| Touch, keyboard and dialog behaviour | `src/controls.js`, `src/input.js`, `src/dialog.js`, `src/interface.js` |
 | Lobby geometry, lighting, screen artwork and game behaviour | `src/lobby.js` |
-| CRT index copy, menu interactions and brief form behaviour | `public/runtime/page.js` |
+| CRT index copy, visual effects and brief form behaviour | `public/runtime/page.js` |
 | Images and character assets | `public/design-assets/`, plus their references in HTML, CSS or JavaScript |
 | Build configuration | `vite.config.js` |
 
@@ -124,6 +138,7 @@ Run the checks and generate a production build:
 
 ```sh
 npm run check
+npm test
 npm run build
 npm run preview
 ```
@@ -153,7 +168,11 @@ Serve the built site over HTTP or HTTPS; opening `index.html` directly from the 
 - Selected template contact details that should not be published.
 - Character model headers, format versions and declared file lengths.
 
-These are source checks. They do not measure visual fidelity, responsiveness, performance or game behaviour. Browser visual and interaction verification remains outstanding. Before release, inspect desktop and mobile layouts, the lobby experiences, menu, CRT index, form feedback and fallback behaviour.
+`npm test` also covers simultaneous input sources, swipe/tap separation, render budgets through 8K, portrait camera framing, editable fields, dialog focus wrapping, scroll restoration, pointer cancellation and control mode changes.
+
+Browser layout checks passed at ten viewport sizes from 240px through 4K, including portrait tablets and landscape phones. Mobile menu focus handling, studio-index readability and the production control UI were also checked. See [responsive verification](docs/responsive-qa.md) for the exact coverage and limits.
+
+The browser control fixture is available at `/tests/controls.html` while `npm run dev` is running. It loads the real lobby markup and control module against a small game-state adapter, so input and layout can be checked without starting the GPU scene. It is not included in the production build. Full 3D visual and physics verification across physical devices remains outstanding.
 
 ## Content and data handling
 

@@ -4,6 +4,8 @@ import { mountLobbyControls } from './controls.js';
 import { framingScale, isTap, renderSize } from './input.js';
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const coarsePointer = matchMedia('(pointer: coarse)');
+let stopped = false;
+document.addEventListener('studio:fallback', () => { stopped = true; });
 
 // Wait (briefly) for the web fonts so canvas-baked text uses Geist instead of a fallback.
 await Promise.race([
@@ -1426,6 +1428,7 @@ function hoverProps(e) {
   lastPtr = { x: e.clientX, y: e.clientY };
 }
 window.addEventListener('pointermove', (e) => {
+  if (e.pointerType === 'touch' || coarsePointer.matches || reducedMotion.matches) return;
   mouse.tx = (e.clientX / innerWidth) * 2 - 1; mouse.ty = (e.clientY / innerHeight) * 2 - 1;
   if ((state.mode === 'home' || state.mode === 'tv') && (window.scrollY || 0) < 40 && e.target === canvas) { state.hover = pick(e); canvas.style.cursor = state.hover ? 'pointer' : ''; hoverProps(e); }
   else { slider.want = 0; lastPtr = null; }
@@ -1569,10 +1572,11 @@ renderer.shadowMap.needsUpdate = true;
 let shadowDirty = 2;
 window.markShadows = () => { shadowDirty = 2; };
 function loop(now) {
-  // the lobby is the backdrop for the machine screen now, so it keeps drawing there
-  const visible = (window.scrollY || 0) < lastH * 1.05 || document.body.classList.contains('machine');
+  if (stopped) return;
+  // Pause the scene when it is off screen, covered by a dialog or backgrounded.
+  const visible = (window.scrollY || 0) < lastH * 1.05;
   const frameInterval = reducedMotion.matches && state.mode === 'home' ? 100 : coarsePointer.matches ? 1000 / 30 : 1000 / 60;
-  if (visible && !document.hidden && !document.body.classList.contains('menu-open') && now - lastNow >= frameInterval) {
+  if (visible && !document.hidden && !document.body.classList.contains('machine') && !document.body.classList.contains('menu-open') && now - lastNow >= frameInterval) {
     if (ball.live || shadowDirty > 0) { renderer.shadowMap.needsUpdate = true; if (!ball.live) shadowDirty--; }
     const a = performance.now(); render(now); const cost = performance.now() - a;
     if (cost > 22) { if (++slowFrames > 60 && DPR > .5) { DPR = Math.max(.5, DPR - 0.25); slowFrames = 0; } } else slowFrames = Math.max(0, slowFrames - 1);

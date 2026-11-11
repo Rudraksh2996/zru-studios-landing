@@ -24,7 +24,9 @@ export function renderSize(width, height, pixelRatio = 1, coarse = false) {
 }
 
 export function framingScale(aspect, mode) {
-  const reference = mode === 'home' ? 1.3 : mode === 'hoop' ? .9 : 1.1;
+  // Basketball launch position is camera-relative: moving that camera changes shots.
+  if (mode === 'hoop') return 1;
+  const reference = mode === 'home' ? 1.3 : 1.1;
   return Math.min(3.5, Math.max(1, reference / Math.max(.1, aspect)));
 }
 
