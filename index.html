@@ -2,7 +2,7 @@
 <html lang="en">
 <head><script src="/runtime/storage-images.js"></script>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zru Studios | We build the stuff people remember.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="Zru Studios is a digital studio &amp; brand workshop building the stuff people remember. Design and development for ambitious brands.">
@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/styles.css">
+<link rel="stylesheet" href="/src/responsive.css">
 <noscript><style>#canvas-container{display:none}#layout{margin-top:0}</style></noscript>
 </head>
 <body>
@@ -19,7 +20,7 @@
 <div id="canvas-container">
   <canvas id="gl"></canvas>
   <div id="loader"><span>loading zru</span></div>
-  <div id="hud" hidden><span class="score">SCORE 0 &nbsp;·&nbsp; SHOTS 0</span><span class="msg"></span></div>
+  <div id="hud" hidden><span class="score">SCORE 0 &nbsp;Â·&nbsp; SHOTS 0</span><span class="msg"></span></div>
   <div id="hint"></div>
   <div id="tvcap" hidden><span class="idx"></span><span class="ttl"></span><span class="desc"></span></div>
 </div>
@@ -52,7 +53,7 @@
       <div id="pp-grain"></div>
       <div id="pp-grain2"></div>
       <div id="pp-vig"></div>
-      <div id="pp-hint"><b>Drag</b> to turn it<span class="ptr"> &nbsp;·&nbsp; <b>Hover</b> to light it</span></div>
+      <div id="pp-hint"><b>Drag</b> to turn it<span class="ptr"> &nbsp;Â·&nbsp; <b>Hover</b> to light it</span></div>
     </div>
     <button class="menu-close" type="button" aria-label="Close menu"><span class="wordmark">zru studios<i>.</i></span></button>
     <nav class="menu-links" aria-label="Full menu">
@@ -61,9 +62,9 @@
         <a href="#top">Home</a><a href="#showcase">Work</a><a href="#services">Services</a><a href="#people">Contact</a><a href="#blog">Start a project</a><a href="#lab">Lab</a><a href="https://github.com/Rudraksh2996">Contact</a>
       </div>
       <div class="menu-foot">
-        <p><a href="https://github.com/Rudraksh2996">Rudraksh Sharma · GitHub</a></p>
+        <p><a href="https://github.com/Rudraksh2996">Rudraksh Sharma Â· GitHub</a></p>
         <p>Design &amp; development</p>
-        <p>UI/UX · websites · branding</p>
+        <p>UI/UX Â· websites Â· branding</p>
       </div>
     </nav>
   </div>
@@ -75,7 +76,7 @@
     <img crossorigin="anonymous" class="ill ill-joystick" src="/design-assets/412e722ae63959b6c36871397c19599422ce4a51732d4e0fa0ded90e25cd3e6b.webp" alt="" aria-hidden="true">
     <img crossorigin="anonymous" class="ill ill-lantern" src="/design-assets/faffa858930f6901e16271424a7b32687d9d86dde0e5dbd7c305959f25eac76c.webp" alt="" aria-hidden="true">
     <img crossorigin="anonymous" class="ill ill-cat" src="/design-assets/985d9a577c6d076ab3833fbec7fc7b49b53957990ff81b2df65b642fa4f4c1e8.webp" alt="" aria-hidden="true">
-    <div class="eyebrow"><span>Zru Studios — studio index</span><hr class="rule" data-line><span>Design. Build. Launch.</span></div>
+    <div class="eyebrow"><span>Zru Studios â€” studio index</span><hr class="rule" data-line><span>Design. Build. Launch.</span></div>
     <article>
       <div class="framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h1 class="f-h0" data-ps>A digital studio &amp; brand workshop building the stuff people remember</h1></div>
       <div class="framed lede"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>We team up with ambitious founders, scale-ups and brands to turn strategy into products, identities and experiences that actually ship.</p></div>
@@ -105,9 +106,18 @@
     <hr class="rule topline" data-line>
     <div class="head">
       <div class="framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h2 class="f-h1" data-ps>Featured Projects</h2></div>
-      <div class="framed sub"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>Selected projects from Zru Studios — interfaces, brand identities, digital products and design systems. Visuals are illustrative.</p></div>
+      <div class="framed sub"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>Selected projects from Zru Studios â€” interfaces, brand identities, digital products and design systems. Visuals are illustrative.</p></div>
     </div>
     <div class="masonry">
+      <article class="card">
+        <a class="shot" href="#work" aria-label="Luminary Dashboard" data-ps><img crossorigin="anonymous" alt="" src="/design-assets/5adbf9bcefb380aba42a0df8cd3ea7bc5d527adf89929b592d3fd2f90b3e5e88.jpg"></a>
+        <div class="meta framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <p class="cats" data-ps>Web App</p>
+          <h3 class="f-h3" data-ps>Luminary Dashboard</h3>
+          <p class="desc f-p" data-ps>A dashboard interface built around clear hierarchy and intuitive product navigation.</p>
+          <a class="go f-p" href="#work" data-ps><span>View project</span><svg viewBox="0 0 20 20"><path d="m11.1075 14.2752 4.2763-4.29004-4.2625-4.2625h1.9112l4.2625 4.27625-4.2763 4.27629h-1.9112ZM2.5 10.8102V9.17391h13.8188v1.63629H2.5Z"/></svg></a>
+        </div>
+      </article>
       <article class="card">
         <a class="shot" href="#work" aria-label="Apex Brand Identity" data-ps><img crossorigin="anonymous" alt="" src="/design-assets/5adbf9bcefb380aba42a0df8cd3ea7bc5d527adf89929b592d3fd2f90b3e5e88.jpg"></a>
         <div class="meta framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
@@ -148,7 +158,7 @@
     <hr class="rule topline" data-line>
     <div class="big f-h1 framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
       <p data-ps>We're here to make the extraordinary.</p>
-      <p data-ps>No shortcuts — just bold, precise work that raises the bar &amp; leaves a mark.</p>
+      <p data-ps>No shortcuts â€” just bold, precise work that raises the bar &amp; leaves a mark.</p>
     </div>
     <div class="cols">
       <div class="inner">
@@ -183,7 +193,7 @@
       <div class="lines with-diagonal-lines"></div>
       <h2 class="f-h3" data-ps>Contact</h2>
       <p class="lead f-h1" data-ps>Let's build something loud.</p>
-      <div class="mail f-h1" data-ps><a href="https://github.com/Rudraksh2996"><span class="actionable">Let’s connect ↗</span></a></div>
+      <div class="mail f-h1" data-ps><a href="https://github.com/Rudraksh2996"><span class="actionable">Letâ€™s connect â†—</span></a></div>
     </div>
   </div>
 </main>
@@ -197,13 +207,13 @@
       <h3 class="f-h2" data-ps>Have an idea in mind?</h3>
       <p class="sub f-h4" data-ps>Write a quick brief and copy it to share with your team.</p>
       <form class="signup" novalidate>
-        <input type="text" name="brief" placeholder="Tell us what you want to build" aria-label="Project brief" required maxlength="2000">
+        <textarea name="brief" rows="3" placeholder="Tell us what you want to build" aria-label="Project brief" required maxlength="2000" aria-describedby="brief-status"></textarea>
         <div class="threeui-page-button-stage threeui-page-button-stage--ember-keycap" data-mode="dark" data-variant="ember-keycap">
           <span class="threeui-page-button-ember-wrap">
             <button class="threeui-page-button threeui-page-button--ember-keycap" type="submit">
               <svg class="threeui-page-button__spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L61 39 L96 50 L61 61 L50 96 L39 61 L4 50 L39 39 Z" /></svg>
               <span class="lbl">Copy brief</span>
-              <span class="threeui-page-button__price">Let’s build</span>
+              <span class="threeui-page-button__price">Letâ€™s build</span>
             </button>
             <span class="threeui-page-button-ember-glow" aria-hidden="true"></span>
             <span class="threeui-page-button-ember-bloom" aria-hidden="true"></span>
@@ -221,7 +231,7 @@
   <div class="grid-layout bottom">
     <div class="links f-h3"><a class="blink" href="#top">Home</a><a class="blink" href="#services">Services</a><a class="blink" href="#showcase">Showcase</a><a class="blink" href="#people">Contact</a><a class="blink" href="#blog">Start a project</a><a class="blink" href="#lab">Lab</a><a class="blink" href="https://github.com/Rudraksh2996">Contact Us</a></div>
     <div class="social"><a href="https://github.com/Rudraksh2996" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.2a7.8 7.8 0 0 0-2.5 15.2c.4.07.54-.17.54-.38v-1.5c-2.2.44-2.66-.94-2.66-.94-.36-.92-.88-1.16-.88-1.16-.72-.5.05-.48.05-.48.8.06 1.22.82 1.22.82.7 1.22 1.86.87 2.32.66.07-.52.28-.87.5-1.07-1.75-.2-3.6-.88-3.6-3.92 0-.87.31-1.58.82-2.13-.08-.2-.36-1.01.08-2.11 0 0 .67-.21 2.2.81a7.6 7.6 0 0 1 4 0c1.53-1.02 2.2-.81 2.2-.81.44 1.1.16 1.91.08 2.11.51.55.82 1.26.82 2.13 0 3.05-1.86 3.72-3.63 3.91.29.25.54.73.54 1.47v2.18c0 .21.14.46.55.38A7.8 7.8 0 0 0 10 2.2Z"/></svg></a></div>
-    <p class="copy f-p">© Zru Studios 2026 all rights reserved</p>
+    <p class="copy f-p">Â© Zru Studios 2026 all rights reserved</p>
   </div>
 </footer>
 </div>

@@ -10,7 +10,7 @@ const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map((m) => m[1]));
 for (const [, fragment] of html.matchAll(/href="#([^"]+)"/g)) {
   assert(ids.has(fragment), `Missing fragment #${fragment}`);
 }
-for (const file of ['index.html', 'src/styles.css', 'src/lobby.js']) {
+for (const file of ['index.html', 'src/styles.css', 'src/responsive.css', 'src/lobby.js']) {
   const text = read(file);
   for (const [, path] of text.matchAll(/(?:src=|href=)["'](\/[^"']+)["']|["'](\/design-assets\/[^"']+)["']/g)) {
     if (path) assert(existsSync(resolve(root, path.startsWith('/src/') ? path.slice(1) : `public${path}`)), `Missing ${path}`);
@@ -20,7 +20,7 @@ for (const file of ['index.html', 'src/styles.css', 'src/lobby.js']) {
   }
   assert(!/sublevel|hello@|sales@|Kyoto &amp; remote|Porto, Portugal|\bLLC\b/i.test(text), `Template detail left in ${file}`);
 }
-assert.equal((html.match(/<article\b/g) || []).length, 4);
+assert.equal((html.match(/<article class="card"/g) || []).length, 4);
 for (const title of ['Zru Studios', 'Luminary Dashboard', 'Apex Brand Identity', 'Orbit SaaS Platform', 'Prism Design System']) assert(html.includes(title), `Missing ${title}`);
 for (const file of [...readdirSync(resolve(root, 'src')).filter((f) => f.endsWith('.js')).map((f) => `src/${f}`), ...readdirSync(resolve(root, 'public/runtime')).map((f) => `public/runtime/${f}`)]) {
   const result = spawnSync(process.execPath, ['--check', resolve(root, file)], { encoding: 'utf8' });
