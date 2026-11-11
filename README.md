@@ -1,15 +1,126 @@
 # Zru Studios
 
-The supplied SublevelStudioLandingPage design, adapted to Zru Studios with the original Three.js lobby, arcade cabinet, basketball interaction, CRT terminal, particle transitions and footer terrain effect.
+An interactive agency landing page for **Zru Studios**, combining a real-time 3D lobby with a portfolio, service overview and project brief tool.
 
-## Run locally
+Built with vanilla JavaScript, Three.js and Vite. The visual experience adapts the supplied `SublevelStudioLandingPage` design to the studio’s branding and existing project content.
 
-Requires Node.js 22.12+ (Node 24 recommended).
+[Repository](https://github.com/Rudraksh2996/zru-studios-landing) · [Rudraksh Sharma on GitHub](https://github.com/Rudraksh2996)
+
+## Features
+
+- **Interactive 3D lobby:** a detailed environment with animated lighting, reactive props and canvas-based screen artwork.
+- **Playable experiences:** an arcade cabinet, basketball shooting and browsable CRT project screens.
+- **Studio portfolio:** Luminary Dashboard, Apex Brand Identity, Orbit SaaS Platform and Prism Design System.
+- **Service overview:** UI/UX design, web design, graphic design, template design and website development.
+- **Motion effects:** particle transitions, a CRT studio index, animated buttons and a terrain effect behind the footer.
+- **Local project briefs:** visitors can write and copy a brief without submitting it to a server.
+- **Responsive page layout:** mobile navigation, a keyboard-accessible link to skip the lobby and a content fallback when scene loading fails or the WebGL context is lost.
+
+## Technology
+
+| Layer | Implementation |
+| --- | --- |
+| Page content | Semantic HTML |
+| Styling | CSS with responsive layouts |
+| Interaction | JavaScript ES modules and supplied browser runtimes |
+| 3D rendering | Three.js `0.160.0` |
+| Development and builds | Vite 8 |
+| Fonts | Google Fonts, with local system fallbacks |
+| Assets | Repository-hosted illustrations, sample images and character models |
+
+The application is a static site. It does not require React, a backend, a database, API keys or an installed ThreeUI package.
+
+## Getting started
+
+### Prerequisites
+
+- **Node.js 22.12 or newer**; Node.js 24 is a suitable choice.
+- **npm**, included with Node.js.
+- A browser with WebGL support for the interactive lobby.
+
+### Installation
 
 ```sh
+git clone https://github.com/Rudraksh2996/zru-studios-landing.git
+cd zru-studios-landing
 npm ci
 npm run dev
 ```
+
+Open the local URL printed by Vite. No environment variables are required.
+
+### Available commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm ci` | Install the dependency versions recorded in `package-lock.json`. |
+| `npm run dev` | Start the development server with live updates. |
+| `npm run check` | Verify source syntax, assets, navigation and studio content. |
+| `npm run build` | Generate the production site in `dist/`. |
+| `npm run preview` | Serve the production build locally for inspection. |
+
+## Exploring the lobby
+
+Click an interactive object to enter its mode.
+
+| Experience | Controls |
+| --- | --- |
+| Arcade cabinet | Click the cabinet; use **Space** to start and fire. Move with **Left/Right arrows** or **A/D**. |
+| Basketball | Click the hoop, then drag upward and release to shoot. **Space** also takes a shot. |
+| CRT project screens | Click a screen. Use the **arrow keys** to browse, or click another screen. |
+| Exit a lobby experience | Press **Escape**. |
+| Studio index | Select the status chip in the header. Press **Escape** to close it. |
+| Navigation menu | Open the menu from the header; select a link or press **Escape** to close it. |
+
+Use **Skip 3D lobby** when navigating by keyboard to jump to the page content.
+
+## Project structure
+
+```text
+zru-studios-landing/
+├── index.html                  # Page content, navigation and script loading order
+├── src/
+│   ├── main.js                 # Scene entry point and WebGL fallback
+│   ├── lobby.js                # Three.js scene, games and interactive props
+│   └── styles.css              # Visual system and responsive styles
+├── public/
+│   ├── favicon.svg             # Studio icon
+│   ├── design-assets/          # Images and GLB character models (.bin files)
+│   └── runtime/                # Browser effect libraries and page interactions
+│       ├── page.js             # Menu, studio index, brief form and effect setup
+│       ├── crt-runtime.js
+│       ├── button-runtime.js
+│       ├── gsap-runtime.js
+│       ├── particle-scroll.js
+│       ├── terrain-plume.js
+│       └── storage-images.js
+├── scripts/
+│   └── check.mjs               # Source and asset verification
+├── package.json
+├── package-lock.json
+└── vite.config.js
+```
+
+Vite copies `public/` into the production output. Keep the browser runtime script order in `index.html`: page interactions depend on the effect runtimes loading first.
+
+## Customization
+
+| Change | Where to edit |
+| --- | --- |
+| Page title, description, navigation, projects and services | `index.html` |
+| Colours, typography, spacing and responsive behaviour | `src/styles.css` |
+| Lobby geometry, lighting, screen artwork and game behaviour | `src/lobby.js` |
+| CRT index copy, menu interactions and brief form behaviour | `public/runtime/page.js` |
+| Images and character assets | `public/design-assets/`, plus their references in HTML, CSS or JavaScript |
+| Build configuration | `vite.config.js` |
+
+Studio details appear in both the page content and the CRT index. When changing branding, also review the text drawn onto lobby screens in `src/lobby.js`.
+
+Three.js is pinned to the version used by the supplied design. Validate rendering and interaction behaviour before upgrading it.
+
+## Build and deployment
+
+Run the checks and generate a production build:
 
 ```sh
 npm run check
@@ -17,25 +128,43 @@ npm run build
 npm run preview
 ```
 
-Deploy the generated `dist/` directory to any static host. Vite builds the Three.js dependency locally; there is no React or private ThreeUI package requirement. Google Fonts is the only external visual dependency; system fallbacks are provided.
+Publish **the contents of `dist/`** to a static hosting provider.
 
-## Source layout
+For a Git-connected host, use these settings:
 
-- `index.html`: accessible page content, navigation, portfolio, capabilities and studio index.
-- `src/styles.css`: the supplied responsive design and small branding additions.
-- `src/main.js`: scene loading and WebGL failure fallback.
-- `src/lobby.js`: original scene, physics, games and canvas textures; Three.js is pinned to 0.160.0 to match the supplied design.
-- `public/runtime/`: supplied CRT, button, GSAP, particle and terrain runtimes, plus page interactions. Keep their script order in `index.html`.
-- `public/design-assets/`: local illustrations, project sample imagery and character GLBs from the supplied bundle.
+| Setting | Value |
+| --- | --- |
+| Install command | `npm ci` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Node.js | `22.12+` |
 
-## Content
+The current source uses root-relative asset URLs such as `/design-assets/` and `/runtime/`. Deploy at the domain root. Hosting under a subdirectory, including a GitHub Pages project URL, requires updating those references and configuring Vite’s `base` before deployment.
 
-Zru Studios, its service names and the four portfolio titles come from the previous repository source. Rudraksh Sharma is the repository author. The public GitHub profile is the only contact destination. No unspecified email, address, social profile, founding date, legal company status, client list or hiring claim is published.
-
-Portfolio images and the lobby screen animations are illustrative supplied design assets, not evidence of client work. The brief form copies text locally to the clipboard; it does not submit data or claim a newsletter subscription. On clipboard failure it offers manual copying.
-
-The supplied design is integrated directly as HTML/CSS/JavaScript because its complete visual implementation was an HTML document. Its library wrapper referenced unrelated, unprovided components; reproducing that wrapper would add missing dependencies without changing this page.
+Serve the built site over HTTP or HTTPS; opening `index.html` directly from the filesystem does not provide the module-loading environment the site expects. Clipboard copying requires a secure context such as HTTPS or localhost; the brief tool offers manual copying if clipboard access fails.
 
 ## Verification
 
-`npm run check` verifies source syntax, local asset references, fragment links, core Zru content, absence of template contact details and GLB integrity. The production build was verified. Browser visual and interaction QA could not be completed in the current desktop automation session; the original responsive CSS and interaction code are retained.
+`npm run check` checks:
+
+- JavaScript syntax in the application and browser runtimes.
+- Local asset references and navigation fragment targets.
+- The four expected portfolio entries and core studio content.
+- Selected template contact details that should not be published.
+- Character model headers, format versions and declared file lengths.
+
+These are source checks. They do not measure visual fidelity, responsiveness, performance or game behaviour. Browser visual and interaction verification remains outstanding. Before release, inspect desktop and mobile layouts, the lobby experiences, menu, CRT index, form feedback and fallback behaviour.
+
+## Content and data handling
+
+The studio name, services and portfolio titles come from the original Zru Studios repository. Portfolio images and animated lobby screens are illustrative design assets; they are not evidence of completed client engagements.
+
+The public GitHub profile is the contact destination. Unspecified email addresses, locations and social profiles are omitted.
+
+The project brief tool writes to the visitor’s clipboard only when requested. It does not send the brief to a server or create a newsletter subscription. Images, models and effect scripts are served locally; Google Fonts requests are external.
+
+## Design credits and licensing
+
+The landing page adapts the user-supplied `SublevelStudioLandingPage` source and its bundled visual effects and assets. The studio identity and existing project titles belong to the Zru Studios project.
+
+This repository does not currently include a `LICENSE` file. Check the applicable permissions for the supplied source, bundled runtimes and media before redistributing them. Dependencies retain their respective licenses.
