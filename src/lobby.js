@@ -1,5 +1,9 @@
 
 import * as THREE from 'three';
+import { mountLobbyControls } from './controls.js';
+import { framingScale, isTap, renderSize } from './input.js';
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const coarsePointer = matchMedia('(pointer: coarse)');
 
 // Wait (briefly) for the web fonts so canvas-baked text uses Geist instead of a fallback.
 await Promise.race([
@@ -1354,6 +1358,7 @@ function gameDraw(t) {
 
 /* ================= modes / camera ================= */
 const state = { mode: 'home', tvIndex: 0, transT: 1, camFrom: new THREE.Vector3(), lookFrom: new THREE.Vector3(), lookCur: new THREE.Vector3(0.25, 2.15, -4.5), hover: null, dragStart: null };
+let controls;
 const camBase = new THREE.Vector3(2.4, 1.9, 4.8);
 const camLook = new THREE.Vector3(0.25, 2.15, -4.5);
 const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -1380,8 +1385,8 @@ function setMode(m, arg) {
   if (m === 'tv' && arg !== undefined && state.mode === 'tv') { showTV(arg); return; }
   if (m === state.mode) return;
   state.camFrom.copy(camera.position); state.lookFrom.copy(state.lookCur); state.transT = 0; state.mode = m;
+  controls?.sync(m);
   hintEl.innerHTML = HINTS[m]; hintEl.classList.toggle('show', m !== 'home');
-  document.documentElement.style.overflow = m === 'home' ? '' : 'hidden';
   if (m !== 'home') window.scrollTo(0, 0);
   game.on = m === 'arcade'; if (game.on) { game.running = false; game.over = false; } 
   ball.mesh.visible = m === 'hoop'; ball.held = true; ball.live = false;
@@ -1425,36 +1430,31 @@ window.addEventListener('pointermove', (e) => {
   if ((state.mode === 'home' || state.mode === 'tv') && (window.scrollY || 0) < 40 && e.target === canvas) { state.hover = pick(e); canvas.style.cursor = state.hover ? 'pointer' : ''; hoverProps(e); }
   else { slider.want = 0; lastPtr = null; }
 }, { passive: true });
-canvas.addEventListener('pointerdown', (e) => {
-  if (state.mode === 'home') { const h = pick(e); if (h) setMode(h, h === 'tv' ? state.pickTV : undefined); return; }
-  if (state.mode === 'tv') { const h = pick(e); if (h === 'tv') showTV(state.pickTV); return; }
-  if (state.mode === 'hoop' && ball.held) { state.dragStart = { x: e.clientX, y: e.clientY, t: performance.now() }; canvas.style.cursor = 'grabbing'; }
-  if (state.mode === 'arcade' && !game.running) gameStart();
-});
-window.addEventListener('pointerup', (e) => {
-  if (state.mode === 'hoop' && state.dragStart && ball.held) {
-    const dx = e.clientX - state.dragStart.x, dy = e.clientY - state.dragStart.y;
-    canvas.style.cursor = 'grab';
-    if (-dy > 18) throwBall(dx, -dy, performance.now() - state.dragStart.t);
-    state.dragStart = null;
+let pointerStart = null;
+canvas.addEventListener('pointerdown', (event) => {
+  if (!event.isPrimary || event.button !== 0) return;
+  pointerStart = { clientX: event.clientX, clientY: event.clientY, pointerId: event.pointerId };
+  if (state.mode === 'hoop' && ball.held) {
+    canvas.setPointerCapture(event.pointerId);
+    state.dragStart = { x: event.clientX, y: event.clientY, t: performance.now(), pointerId: event.pointerId };
+    canvas.style.cursor = 'grabbing';
   }
 });
-window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && state.mode !== 'home') { setMode('home'); return; }
-  if (state.mode === 'arcade') {
-    if (['ArrowLeft', 'a', 'A'].includes(e.key)) game.keys.left = true;
-    if (['ArrowRight', 'd', 'D'].includes(e.key)) game.keys.right = true;
-    if (e.key === ' ' || e.key === 'ArrowUp') { game.keys.fire = true; if (!game.running) gameStart(); }
-    if ([' ', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) e.preventDefault();
+window.addEventListener('pointerup', (event) => {
+  if (state.mode === 'hoop' && state.dragStart?.pointerId === event.pointerId && ball.held) {
+    const { x, y, t } = state.dragStart;
+    // Normalize swipes to the original desktop coordinate scale.
+    const scale = 700 / Math.max(240, canvas.getBoundingClientRect().height);
+    if (y - event.clientY > 18) throwBall((event.clientX - x) * scale, (y - event.clientY) * scale, performance.now() - t);
+    state.dragStart = null; canvas.style.cursor = 'grab';
+  } else if (pointerStart?.pointerId === event.pointerId && isTap(pointerStart, event) && event.target === canvas) {
+    if (state.mode === 'home') { const hit = pick(event); if (hit) setMode(hit, hit === 'tv' ? state.pickTV : undefined); }
+    else if (state.mode === 'tv') { if (pick(event) === 'tv') showTV(state.pickTV); }
+    else if (state.mode === 'arcade' && !game.running) gameStart();
   }
-  if (state.mode === 'hoop' && e.key === ' ') { e.preventDefault(); if (ball.held) throwBall(0, 150, 250); }
-  if (state.mode === 'tv') { if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); showTV(state.tvIndex + 1); } if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); showTV(state.tvIndex - 1); } }
+  if (pointerStart?.pointerId === event.pointerId) pointerStart = null;
 });
-window.addEventListener('keyup', (e) => {
-  if (['ArrowLeft', 'a', 'A'].includes(e.key)) game.keys.left = false;
-  if (['ArrowRight', 'd', 'D'].includes(e.key)) game.keys.right = false;
-  if (e.key === ' ' || e.key === 'ArrowUp') game.keys.fire = false;
-});
+window.addEventListener('pointercancel', () => { pointerStart = null; state.dragStart = null; canvas.style.cursor = ''; });
 window.addEventListener('scroll', () => { if (state.mode !== 'home' && (window.scrollY || 0) > 60) setMode('home'); }, { passive: true });
 
 /* ---------- basketball physics ---------- */
@@ -1501,19 +1501,26 @@ function ballStep(dt) {
 /* ================= sizing / loop ================= */
 let lastW = 0, lastH = 0, lastDPR = 0;
 function viewport() {
-  let w = innerWidth || document.documentElement.clientWidth || 0, h = innerHeight || document.documentElement.clientHeight || 0;
-  if (!w || !h) { w = Math.min(screen.width || 1440, 1600); h = Math.min(screen.height || 900, 900); }
-  return [Math.max(1, w), Math.max(1, h)];
+  const rect = canvas.parentElement.getBoundingClientRect();
+  return [Math.max(1, Math.round(rect.width)), Math.max(1, Math.round(rect.height))];
 }
 function resize() {
-  const [w, h] = viewport(); if (w === lastW && h === lastH && DPR === lastDPR) return; lastW = w; lastH = h; lastDPR = DPR;
+  const [w, h] = viewport();
+  const { ratio } = renderSize(w, h, window.devicePixelRatio, coarsePointer.matches);
+  if (w !== lastW || h !== lastH) DPR = ratio;
+  DPR = Math.min(DPR, ratio);
+  if (w === lastW && h === lastH && DPR === lastDPR) return;
+  lastW = w; lastH = h; lastDPR = DPR;
   renderer.setPixelRatio(DPR); renderer.setSize(w, h, false);
-  camera.aspect = w / h; camera.updateProjectionMatrix();
+  camera.aspect = w / h;
+  camera.fov = 55;
+  camera.updateProjectionMatrix();
   const rw = Math.max(2, Math.floor(w * DPR)), rh = Math.max(2, Math.floor(h * DPR));
   rt.setSize(rw, rh); postMat.uniforms.uRes.value.set(rw, rh);
 }
-new ResizeObserver(() => resize()).observe(document.documentElement);
-window.addEventListener('resize', resize);
+new ResizeObserver(resize).observe(canvas.parentElement);
+window.addEventListener('resize', resize, { passive: true });
+window.visualViewport?.addEventListener('resize', resize, { passive: true });
 
 const t0 = performance.now();
 let frame = 0, lastNow = t0, slowFrames = 0;
@@ -1523,7 +1530,8 @@ function render(now) {
   const t = (now - t0) / 1000; const dt = Math.min(0.05, (now - lastNow) / 1000); lastNow = now;
   mouse.x += (mouse.tx - mouse.x) * 0.06; mouse.y += (mouse.ty - mouse.y) * 0.06;
   const [cp, cl] = targets();
-  state.transT = Math.min(1, state.transT + dt / 1.15); const e = ease(state.transT);
+  cp.sub(cl).multiplyScalar(framingScale(camera.aspect, state.mode)).add(cl);
+  state.transT = Math.min(1, state.transT + dt / 1.15); const e = reducedMotion.matches ? 1 : ease(state.transT);
   camera.position.lerpVectors(state.camFrom, cp, e); state.lookCur.lerpVectors(state.lookFrom, cl, e); camera.lookAt(state.lookCur);
   // damped pendulums: they keep swinging after the pointer has gone
   for (const p of pendants) {
@@ -1563,13 +1571,15 @@ window.markShadows = () => { shadowDirty = 2; };
 function loop(now) {
   // the lobby is the backdrop for the machine screen now, so it keeps drawing there
   const visible = (window.scrollY || 0) < lastH * 1.05 || document.body.classList.contains('machine');
-  if (visible) {
+  const frameInterval = reducedMotion.matches && state.mode === 'home' ? 100 : coarsePointer.matches ? 1000 / 30 : 1000 / 60;
+  if (visible && !document.hidden && !document.body.classList.contains('menu-open') && now - lastNow >= frameInterval) {
     if (ball.live || shadowDirty > 0) { renderer.shadowMap.needsUpdate = true; if (!ball.live) shadowDirty--; }
     const a = performance.now(); render(now); const cost = performance.now() - a;
-    if (cost > 22) { if (++slowFrames > 60 && DPR > 1) { DPR = Math.max(1, DPR - 0.5); slowFrames = 0; } } else slowFrames = Math.max(0, slowFrames - 1);
+    if (cost > 22) { if (++slowFrames > 60 && DPR > .5) { DPR = Math.max(.5, DPR - 0.25); slowFrames = 0; } } else slowFrames = Math.max(0, slowFrames - 1);
   }
   requestAnimationFrame(loop);
 }
+controls = mountLobbyControls({ game, state, setMode, showTV, gameStart, shoot() { if (ball.held) throwBall(0, 150, 250); } });
 state.camFrom.copy(camBase); state.lookFrom.copy(camLook); camera.position.copy(camBase);
 resize();
 render(performance.now());

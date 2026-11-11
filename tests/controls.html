@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Lobby controls browser fixture</title>
+  <link rel="stylesheet" href="/src/styles.css">
+  <link rel="stylesheet" href="/src/responsive.css">
+  <style>#gl{background:#151515}#control-state{position:fixed;top:12px;left:12px;z-index:10;white-space:pre-wrap;font:14px/1.5 monospace}</style>
+</head>
+<body>
+  <output id="control-state" aria-label="Control state"></output>
+  <script type="module">
+    // Exercise the production controls and markup without starting the GPU scene.
+    import { mountLobbyControls } from '/src/controls.js';
+    const response = await fetch('/');
+    const source = new DOMParser().parseFromString(await response.text(), 'text/html');
+    document.body.append(source.getElementById('canvas-container'));
+    document.getElementById('loader').remove();
+    const game = { keys: {}, running: false };
+    const state = { mode: 'home', tvIndex: 0 };
+    let shots = 0, controls;
+    controls = mountLobbyControls({
+      game, state,
+      setMode(mode) { state.mode = mode; controls.sync(mode); },
+      showTV(index) { state.tvIndex = index; },
+      gameStart() { game.running = true; },
+      shoot() { shots++; },
+    });
+    setInterval(() => {
+      document.getElementById('control-state').textContent = JSON.stringify({ ...state, keys: game.keys, running: game.running, shots });
+    }, 50);
+  </script>
+</body>
+</html>

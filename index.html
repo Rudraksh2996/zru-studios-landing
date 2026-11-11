@@ -16,12 +16,35 @@
 <body>
 
 <a class="skip-link" href="#top">Skip 3D lobby</a>
+<button type="button" class="graphics-toggle" id="graphics-toggle">Use lighter view</button>
 <div id="lab" aria-hidden="true"></div>
 <div id="canvas-container">
-  <canvas id="gl"></canvas>
+  <canvas id="gl" tabindex="0" aria-label="Interactive studio lobby. Choose an experience using the controls below." aria-describedby="lobby-status"></canvas>
   <div id="loader"><span>loading zru</span></div>
-  <div id="hud" hidden><span class="score">SCORE 0 &nbsp;Â·&nbsp; SHOTS 0</span><span class="msg"></span></div>
+  <div id="hud" hidden><span class="score">SCORE 0 &nbsp;·&nbsp; SHOTS 0</span><span class="msg"></span></div>
   <div id="hint"></div>
+  <div id="lobby-controls" class="lobby-controls" hidden>
+    <p id="lobby-status" class="lobby-status" role="status" aria-live="polite"></p>
+    <div class="experience-picker" data-controls-for="home" role="group" aria-label="Lobby experiences">
+      <button type="button" data-enter-mode="arcade">Arcade</button>
+      <button type="button" data-enter-mode="hoop">Basketball</button>
+      <button type="button" data-enter-mode="tv">Project screens</button>
+      <a href="#top">Explore studio ↓</a>
+    </div>
+    <div class="game-toolbar" data-controls-for="arcade hoop tv" hidden>
+      <button type="button" data-exit>Exit experience</button>
+      <div data-controls-for="arcade" role="group" aria-label="Arcade controls" hidden>
+        <button type="button" data-hold="left" aria-label="Move left">←</button>
+        <button type="button" data-hold="right" aria-label="Move right">→</button>
+        <button type="button" data-hold="fire">Fire</button>
+      </div>
+      <div data-controls-for="hoop" hidden><button type="button" data-shoot>Shoot</button></div>
+      <div data-controls-for="tv" role="group" aria-label="Browse project screens" hidden>
+        <button type="button" data-browse="-1">← Previous</button>
+        <button type="button" data-browse="1">Next →</button>
+      </div>
+    </div>
+  </div>
   <div id="tvcap" hidden><span class="idx"></span><span class="ttl"></span><span class="desc"></span></div>
 </div>
 
@@ -39,21 +62,21 @@
       <a class="blink" href="#lab">Lab</a>
     </div>
     <div class="right">
-      <button class="term arcade metal" id="termstatus" aria-pressed="false" title="Open the machine-readable view"><span class="led"></span><span class="prompt">agent@zru</span><span class="txt">online</span><span class="cur"></span></button>
+      <button class="term arcade metal" id="termstatus" aria-label="Open studio index" aria-controls="machine" aria-expanded="false" aria-pressed="false" title="Open the studio index"><span class="led"></span><span class="prompt">agent@zru</span><span class="txt">online</span><span class="cur"></span></button>
       <a class="icon mail blink arcade metal" href="https://github.com/Rudraksh2996" aria-label="Contact us" title="Contact us"><svg viewBox="0 0 20 20"><path d="M3 4.5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Zm.6 1.5 6.4 4.9L16.4 6H3.6ZM3.5 7.6v7.3h13V7.6L10 12.5 3.5 7.6Z"/></svg></a>
-      <button class="icon burger arcade metal" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="1.6" rx=".8"/><rect x="3" y="9.2" width="14" height="1.6" rx=".8"/><rect x="3" y="13.4" width="14" height="1.6" rx=".8"/></svg></button>
+      <button class="icon burger arcade metal" aria-label="Menu" aria-controls="studio-menu" aria-expanded="false"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="1.6" rx=".8"/><rect x="3" y="9.2" width="14" height="1.6" rx=".8"/><rect x="3" y="13.4" width="14" height="1.6" rx=".8"/></svg></button>
     </div>
   </div>
 </nav>
 
-  <div class="menu" hidden>
+  <div class="menu" id="studio-menu" role="dialog" aria-label="Studio navigation" tabindex="-1" hidden>
     <div id="paper-stage">
       <div id="pp-dof"></div>
       <canvas id="pp-gl"></canvas>
       <div id="pp-grain"></div>
       <div id="pp-grain2"></div>
       <div id="pp-vig"></div>
-      <div id="pp-hint"><b>Drag</b> to turn it<span class="ptr"> &nbsp;Â·&nbsp; <b>Hover</b> to light it</span></div>
+      <div id="pp-hint"><b>Drag</b> to turn it<span class="ptr"> &nbsp;·&nbsp; <b>Hover</b> to light it</span></div>
     </div>
     <button class="menu-close" type="button" aria-label="Close menu"><span class="wordmark">zru studios<i>.</i></span></button>
     <nav class="menu-links" aria-label="Full menu">
@@ -62,9 +85,9 @@
         <a href="#top">Home</a><a href="#showcase">Work</a><a href="#services">Services</a><a href="#people">Contact</a><a href="#blog">Start a project</a><a href="#lab">Lab</a><a href="https://github.com/Rudraksh2996">Contact</a>
       </div>
       <div class="menu-foot">
-        <p><a href="https://github.com/Rudraksh2996">Rudraksh Sharma Â· GitHub</a></p>
+        <p><a href="https://github.com/Rudraksh2996">Rudraksh Sharma · GitHub</a></p>
         <p>Design &amp; development</p>
-        <p>UI/UX Â· websites Â· branding</p>
+        <p>UI/UX · websites · branding</p>
       </div>
     </nav>
   </div>
@@ -76,7 +99,7 @@
     <img crossorigin="anonymous" class="ill ill-joystick" src="/design-assets/412e722ae63959b6c36871397c19599422ce4a51732d4e0fa0ded90e25cd3e6b.webp" alt="" aria-hidden="true">
     <img crossorigin="anonymous" class="ill ill-lantern" src="/design-assets/faffa858930f6901e16271424a7b32687d9d86dde0e5dbd7c305959f25eac76c.webp" alt="" aria-hidden="true">
     <img crossorigin="anonymous" class="ill ill-cat" src="/design-assets/985d9a577c6d076ab3833fbec7fc7b49b53957990ff81b2df65b642fa4f4c1e8.webp" alt="" aria-hidden="true">
-    <div class="eyebrow"><span>Zru Studios â€” studio index</span><hr class="rule" data-line><span>Design. Build. Launch.</span></div>
+    <div class="eyebrow"><span>Zru Studios — studio index</span><hr class="rule" data-line><span>Design. Build. Launch.</span></div>
     <article>
       <div class="framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h1 class="f-h0" data-ps>A digital studio &amp; brand workshop building the stuff people remember</h1></div>
       <div class="framed lede"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>We team up with ambitious founders, scale-ups and brands to turn strategy into products, identities and experiences that actually ship.</p></div>
@@ -106,7 +129,7 @@
     <hr class="rule topline" data-line>
     <div class="head">
       <div class="framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><h2 class="f-h1" data-ps>Featured Projects</h2></div>
-      <div class="framed sub"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>Selected projects from Zru Studios â€” interfaces, brand identities, digital products and design systems. Visuals are illustrative.</p></div>
+      <div class="framed sub"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i><p class="f-h4" data-ps>Selected projects from Zru Studios — interfaces, brand identities, digital products and design systems. Visuals are illustrative.</p></div>
     </div>
     <div class="masonry">
       <article class="card">
@@ -158,7 +181,7 @@
     <hr class="rule topline" data-line>
     <div class="big f-h1 framed"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
       <p data-ps>We're here to make the extraordinary.</p>
-      <p data-ps>No shortcuts â€” just bold, precise work that raises the bar &amp; leaves a mark.</p>
+      <p data-ps>No shortcuts — just bold, precise work that raises the bar &amp; leaves a mark.</p>
     </div>
     <div class="cols">
       <div class="inner">
@@ -193,7 +216,7 @@
       <div class="lines with-diagonal-lines"></div>
       <h2 class="f-h3" data-ps>Contact</h2>
       <p class="lead f-h1" data-ps>Let's build something loud.</p>
-      <div class="mail f-h1" data-ps><a href="https://github.com/Rudraksh2996"><span class="actionable">Letâ€™s connect â†—</span></a></div>
+      <div class="mail f-h1" data-ps><a href="https://github.com/Rudraksh2996"><span class="actionable">Let’s connect ↗</span></a></div>
     </div>
   </div>
 </main>
@@ -213,7 +236,7 @@
             <button class="threeui-page-button threeui-page-button--ember-keycap" type="submit">
               <svg class="threeui-page-button__spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4 L61 39 L96 50 L61 61 L50 96 L39 61 L4 50 L39 39 Z" /></svg>
               <span class="lbl">Copy brief</span>
-              <span class="threeui-page-button__price">Letâ€™s build</span>
+              <span class="threeui-page-button__price">Let’s build</span>
             </button>
             <span class="threeui-page-button-ember-glow" aria-hidden="true"></span>
             <span class="threeui-page-button-ember-bloom" aria-hidden="true"></span>
@@ -231,14 +254,14 @@
   <div class="grid-layout bottom">
     <div class="links f-h3"><a class="blink" href="#top">Home</a><a class="blink" href="#services">Services</a><a class="blink" href="#showcase">Showcase</a><a class="blink" href="#people">Contact</a><a class="blink" href="#blog">Start a project</a><a class="blink" href="#lab">Lab</a><a class="blink" href="https://github.com/Rudraksh2996">Contact Us</a></div>
     <div class="social"><a href="https://github.com/Rudraksh2996" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.2a7.8 7.8 0 0 0-2.5 15.2c.4.07.54-.17.54-.38v-1.5c-2.2.44-2.66-.94-2.66-.94-.36-.92-.88-1.16-.88-1.16-.72-.5.05-.48.05-.48.8.06 1.22.82 1.22.82.7 1.22 1.86.87 2.32.66.07-.52.28-.87.5-1.07-1.75-.2-3.6-.88-3.6-3.92 0-.87.31-1.58.82-2.13-.08-.2-.36-1.01.08-2.11 0 0 .67-.21 2.2.81a7.6 7.6 0 0 1 4 0c1.53-1.02 2.2-.81 2.2-.81.44 1.1.16 1.91.08 2.11.51.55.82 1.26.82 2.13 0 3.05-1.86 3.72-3.63 3.91.29.25.54.73.54 1.47v2.18c0 .21.14.46.55.38A7.8 7.8 0 0 0 10 2.2Z"/></svg></a></div>
-    <p class="copy f-p">Â© Zru Studios 2026 all rights reserved</p>
+    <p class="copy f-p">© Zru Studios 2026 all rights reserved</p>
   </div>
 </footer>
 </div>
 
 <div id="machine-scrim" aria-hidden="true"></div>
 <div id="machine-scan" aria-hidden="true"></div>
-<div id="machine" aria-label="Machine-readable index">
+<div id="machine" role="dialog" aria-label="Studio index" tabindex="-1" hidden>
   <div id="crt-host"></div>
   <button id="machine-close" class="f-nav">[esc] close</button>
   <pre class="sr-only">ZRU STUDIOS :: STUDIO INDEX

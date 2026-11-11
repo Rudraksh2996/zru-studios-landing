@@ -12,26 +12,29 @@
   const SOFT_CRT = { scanDepth: 0.16, grille: 0.18, chroma: 0.6, bar: 0.03, flicker: 0.018, grain: 0.02, vignette: 0.5, gain: 1.22, halo: 0.08, sheen: [1.0, 0.62, 0.38], room: [0.03, 0.015, 0.008], background: '#050200', curve: [0.10, 0.145] };
   function setMode(m) {
     const machine = m === 'machine';
+    const plain = new URLSearchParams(location.search).get('graphics') === 'off' || matchMedia('(max-width: 640px), (max-height: 500px), (prefers-reduced-motion: reduce)').matches;
+    document.body.classList.toggle('machine-plain', machine && plain);
     document.body.classList.toggle('machine', machine);
     window.VHS = machine
       ? { speed: .75, switching: .09, switchingHeight: .035, acBeat: 1.4, grain: .22, scanlines: .5, jitter: .4 }
       : { speed: .5, switching: .05, switchingHeight: .02, acBeat: 1, grain: .1, scanlines: .1, jitter: .25 };
-    if (machine && !crt) { try { crt = window.ThreeUICrt.mountCrt(document.getElementById('crt-host'), { variant: 'terminal', speed: 1, typeSpeed: 14, motion: 1, hue: 0, saturation: 1, brightness: 1, opacity: 1, fixedFont: 17, colors: ORANGE, styleOverrides: SOFT_CRT }, STUDIO_LOG); } catch (e) { console.warn('CRT unavailable', e); } }
+    if (machine && !plain && !crt) { try { crt = window.ThreeUICrt.mountCrt(document.getElementById('crt-host'), { variant: 'terminal', speed: 1, typeSpeed: 14, motion: 1, hue: 0, saturation: 1, brightness: 1, opacity: 1, fixedFont: 17, colors: ORANGE, styleOverrides: SOFT_CRT }, STUDIO_LOG); } catch (e) { console.warn('CRT unavailable', e); } }
     if (!machine && crt) { crt.destroy(); crt = null; }
     term.setAttribute('aria-pressed', String(machine));
     type(machine ? 'machine view · esc' : STATUS[si]);
-    window.scrollTo(0, 0);
+    document.dispatchEvent(new CustomEvent('studio:machine', { detail: { open: machine } }));
   }
   term.addEventListener('click', () => setMode(document.body.classList.contains('machine') ? 'human' : 'machine'));
   document.getElementById('machine-close').addEventListener('click', () => setMode('human'));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('machine')) setMode('human'); });
-  document.addEventListener('keydown', (e) => { if (e.key === '/' && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); location.href = 'https://github.com/Rudraksh2996'; } });
+
 
 
   // VHS overlay for the DOM: grain, scanlines, head-switching band and AC beat as a screen-blended layer.
   (function () {
+    if (new URLSearchParams(location.search).get('graphics') === 'off') return;
     const cv = document.getElementById('vhs-overlay'); const gl = cv.getContext('webgl2', { alpha: true, antialias: false, premultipliedAlpha: true });
-    if (!gl) return;
+    if (!gl || matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse)').matches) return;
     const cfg = () => window.VHS || { speed: .5, switching: .05, switchingHeight: .02, acBeat: 1, grain: .1, scanlines: .1, jitter: .25 };
     const V = `#version 300 es
     precision highp float; layout(location=0) in vec2 aPos; out vec2 vUv; void main(){ vUv = aPos*0.5+0.5; gl_Position = vec4(aPos,0.,1.); }`;
@@ -73,7 +76,7 @@
 
   // Canvas UI Particle Scroll over the page content: text and images below the formation line dissolve
   // into orange/yellow grains and reassemble as they scroll up; the live DOM blurs in once a block has landed.
-  if (window.ParticleScroll && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (new URLSearchParams(location.search).get('graphics') !== 'off' && window.ParticleScroll && !matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse)').matches) {
     window.__ps = window.ParticleScroll.mountParticleScroll('[data-ps]', { point: 0.68, band: 330, density: 2, size: 1.25, spread: 200, gravity: 0.35, drift: 0.9, swirl: 70, stagger: 0.55, fade: 0.42, settle: 0.7, hold: 1.15, smoothing: 0.26, tintA: [1.0, 0.3, 0.0], tintB: [1.0, 0.82, 0.2] });
   }
   // Keep briefs local; announce success only after the clipboard write succeeds.
@@ -96,7 +99,7 @@
   })();
 
   // ThreeUI <TerrainPlumeCanvas variant="sunset-drive" /> behind the footer copy.
-  if (window.ThreeUITerrainPlume) {
+  if (new URLSearchParams(location.search).get('graphics') !== 'off' && window.ThreeUITerrainPlume && !matchMedia('(prefers-reduced-motion: reduce), (pointer: coarse)').matches) {
     window.__plume = window.ThreeUITerrainPlume.mountTerrainPlume(document.getElementById('blog'), {
       variant: 'sunset-drive',
       speed: 1.00, size: 1.00, thickness: 1.00, strength: 1.00, softness: 0.00,
@@ -109,6 +112,7 @@
   // since a transform write every scroll event is an easy way to lose frames.
   (function illParallax() {
     const els = [...document.querySelectorAll('.ill')];
+    if (matchMedia('(pointer: coarse)').matches) return;
     if (!els.length || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const SPEED = { 'ill-lantern': 0.20, 'ill-cat': -0.13, 'ill-joystick': 0.30, 'ill-crt': 0.14 };
     const items = els.map((el) => {
@@ -133,72 +137,6 @@
     frame();
   })();
 
-  // Pin the menu to the sheet. The card reports its four projected corners, so a
-  // projective transform from a flat reference box onto those corners puts real
-  // anchors on the paper — they bend and turn with it and stay clickable.
-  (function menuOnCard() {
-    const links = document.querySelector('.menu-links');
-    const menu = document.querySelector('.menu');
-    if (!links || !menu) return;
-    const W = 560, H = 790;
-    // solve the 8 unknowns of a projective map from the reference box to the quad
-    function homography(dst) {
-      const src = [[0, 0], [W, 0], [W, H], [0, H]];
-      const A = [], b = [];
-      for (let i = 0; i < 4; i++) {
-        const [x, y] = src[i], [X, Y] = dst[i];
-        A.push([x, y, 1, 0, 0, 0, -x * X, -y * X]); b.push(X);
-        A.push([0, 0, 0, x, y, 1, -x * Y, -y * Y]); b.push(Y);
-      }
-      for (let c = 0; c < 8; c++) {                       // gaussian elimination
-        let piv = c;
-        for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[piv][c])) piv = r;
-        if (Math.abs(A[piv][c]) < 1e-9) return null;
-        [A[c], A[piv]] = [A[piv], A[c]]; [b[c], b[piv]] = [b[piv], b[c]];
-        for (let r = 0; r < 8; r++) {
-          if (r === c) continue;
-          const f = A[r][c] / A[c][c];
-          for (let k = c; k < 8; k++) A[r][k] -= f * A[c][k];
-          b[r] -= f * b[c];
-        }
-      }
-      return b.map((v, i) => v / A[i][i]);
-    }
-    let raf = 0;
-    const tick = () => {
-      raf = requestAnimationFrame(tick);
-      const sheet = window.__sheet;
-      if (!menu.classList.contains('open') || !sheet) return;
-      const q = sheet.state().quad;
-      if (!q) return;
-      // the reported quad is expanded 1.07x for hit testing; step back to the real face
-      const cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4;
-      const cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
-      const face = q.map(([x, y]) => [cx + (x - cx) / 1.07, cy + (y - cy) / 1.07]);
-      // A homography only holds while the face is toward us. Turn the sheet past
-      // edge-on and the quad's winding inverts, which sent the card off as a stray
-      // slab. The signed area tells us which way the face points: hide it once it
-      // turns away, and fade it out as it goes edge-on rather than popping.
-      let area = 0;
-      for (let i = 0; i < 4; i++) {
-        const [x1, y1] = face[i], [x2, y2] = face[(i + 1) % 4];
-        area += x1 * y2 - x2 * y1;
-      }
-      area /= 2;
-      if (area <= 0) { links.style.visibility = 'hidden'; return; }
-      const faceOn = Math.min(1, Math.abs(area) / (W * H * 0.16));
-      links.style.visibility = '';
-      links.style.opacity = faceOn.toFixed(3);
-      const h = homography(face);
-      if (!h) return;
-      const [a, bb, c, d, e, f, g, hh] = h;
-      links.style.transform = `matrix3d(${a},${d},0,${g},${bb},${e},0,${hh},0,0,1,0,${c},${f},0,1)`;
-      if (!links.classList.contains('on')) links.classList.add('on');
-    };
-    tick();
-    menu.addEventListener('transitionend', () => { if (!menu.classList.contains('open')) links.classList.remove('on'); });
-  })();
-
   // Hover flashlight across the header, rAF-throttled so a fast pointer cannot
   // queue more style writes than there are frames to paint them.
   (function headlight() {
@@ -219,33 +157,7 @@
     bar.addEventListener('pointerleave', () => bar.style.setProperty('--lit', '0'));
   })();
 
-  // Hamburger menu
-  (function burgerMenu() {
-    const burger = document.querySelector('#topnav .burger');
-    const menu = document.querySelector('.menu');
-    if (!burger || !menu) return;
-    const set = (open) => {
-      if (open) {
-        menu.hidden = false;
-        requestAnimationFrame(() => {
-          menu.classList.add('open');
-          // the panel was display:none, so the paper measured 0x0 until now
-          window.dispatchEvent(new Event('resize'));
-        });
-      } else {
-        menu.classList.remove('open');
-        setTimeout(() => { if (!menu.classList.contains('open')) menu.hidden = true; }, 450);
-      }
-      burger.setAttribute('aria-expanded', String(open));
-      document.body.style.overflow = open ? 'hidden' : '';
-      document.body.classList.toggle('menu-open', open);
-    };
-    menu.querySelector('.menu-close')?.addEventListener('click', () => set(false));
-    burger.addEventListener('click', (e) => { e.stopPropagation(); set(!menu.classList.contains('open')); });
-    menu.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
-
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) set(false); });
-  })();
+  // Responsive dialog and focus handling live in src/interface.js.
 
   // Hairlines draw themselves in as they enter the viewport; the vertical container
   // lines unroll from the top once the page content is reached.

@@ -29,6 +29,8 @@ main { gap: clamp(48px, 10vw, 160px); }
 .hero .eyebrow .rule { min-width: 24px; }
 .hero .lede { max-width: 48rem; }
 .logos .grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+.logos > .label, .caps > .label { grid-column: 1 / -1; justify-self: start; }
+.logos > .rule { grid-column: 1 / -1; }
 .logos a { aspect-ratio: auto; min-height: 88px; }
 .logos .cell { padding: 8px; }
 .capability-word { padding: 8px; font-size: clamp(.875rem, 1.3vw, 1.125rem); }
@@ -80,6 +82,47 @@ footer .copy { flex: 1 1 220px; }
 #hud { top: calc(142px + var(--safe-top)); left: max(16px, var(--safe-left)); }
 #hud .msg { font-size: clamp(1.75rem, 6vw, 4rem); line-height: 1.1; }
 #machine-close { top: calc(12px + var(--safe-top)); right: max(12px, var(--safe-right)); min-height: 44px; }
+/* Navigation stays readable and scrollable without a GPU or a projected sheet. */
+.menu { overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y pinch-zoom; padding: calc(80px + var(--safe-top)) max(16px, var(--safe-right)) max(24px, var(--safe-bottom)) max(16px, var(--safe-left)); background: #08080af5; }
+.menu #paper-stage { display: none; }
+.menu-links { position: relative; inset: auto; width: min(100%, 42rem); height: auto; min-height: 0; margin: 0 auto; padding: clamp(16px, 4vw, 40px); transform: none; opacity: 1; visibility: visible; overflow: visible; }
+.menu-nav { margin: 0; gap: 6px; align-items: stretch; }
+.menu-nav a { font-size: clamp(1.25rem, 4vw, 2.5rem); min-height: 48px; padding: 8px 18px; overflow-wrap: anywhere; }
+.menu-ill { display: none; }
+.menu-foot { margin-top: 32px; overflow-wrap: anywhere; }
+.menu-foot a { display: inline-flex; align-items: center; min-height: 44px; }
+.menu-close { position: fixed; top: calc(16px + var(--safe-top)); left: max(16px, var(--safe-left)); min-height: 44px; }
+.lobby-controls { position: absolute; inset: auto max(12px, var(--safe-right)) max(12px, var(--safe-bottom)) max(12px, var(--safe-left)); z-index: 5; display: grid; justify-items: center; gap: 8px; }
+.lobby-status { max-width: 44rem; color: #f2f2f2; background: #000c; padding: 4px 10px; border-radius: 6px; font-size: .8125rem; line-height: 1.4; text-align: center; }
+.experience-picker, .game-toolbar, .game-toolbar > div { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+.lobby-controls :is(button, a) { min-height: 48px; min-width: 48px; padding: 10px 16px; border: 1px solid #ffffff45; border-radius: 6px; background: #151515ef; color: #fff; font: 600 .875rem/1.25 var(--sans); display: inline-flex; align-items: center; justify-content: center; text-align: center; user-select: none; }
+.lobby-controls [data-hold] { touch-action: none; }
+.lobby-controls :is(button, a):active { background: #873000; }
+.lobby-controls [data-exit] { border-color: #ff7a40; }
+#gl:focus-visible { outline-offset: -4px; }
+.graphics-toggle { position: fixed; left: max(12px, var(--safe-left)); bottom: max(12px, var(--safe-bottom)); z-index: 950; min-height: 44px; padding: 8px 12px; border: 1px solid #ffffff45; border-radius: 6px; background: #151515ee; color: #e6e6e6; font-size: .8125rem; }
+body:has(#canvas-container:not([hidden])) .graphics-toggle { bottom: auto; top: calc(84px + var(--safe-top)); }
+body:is(.menu-open, .machine) .graphics-toggle { display: none; }
+.machine-plain #crt-host, .machine-plain #machine-scan, body.machine-plain #vhs-overlay { display: none; }
+.machine-plain #machine { background: #080400; mix-blend-mode: normal; }
+.machine-plain #machine .sr-only { position: absolute; inset: calc(80px + var(--safe-top)) max(16px, var(--safe-right)) max(16px, var(--safe-bottom)) max(16px, var(--safe-left)); width: auto; height: auto; clip: auto; clip-path: none; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 400 1rem/1.6 var(--mono); color: #ffad75; }
+@media (max-width: 640px), (prefers-reduced-motion: reduce), (max-height: 500px) {
+  #crt-host { display: none; }
+  #machine { background: #080400; mix-blend-mode: normal; }
+  #machine .sr-only { position: absolute; inset: calc(80px + var(--safe-top)) max(16px, var(--safe-right)) max(16px, var(--safe-bottom)) max(16px, var(--safe-left)); width: auto; height: auto; clip: auto; clip-path: none; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font: 400 1rem/1.6 var(--mono); color: #ffad75; }
+  #machine-scan, body.machine #vhs-overlay { display: none; }
+}
+@media (max-width: 480px) {
+  .experience-picker { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 28rem); }
+  .lobby-controls :is(button, a) { padding-inline: 10px; }
+  #hint { display: none; }
+  #tvcap { bottom: calc(200px + var(--safe-bottom)); }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .lobby-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); padding: 0; }
+  .experience-picker { display: flex; width: auto; }
+  .lobby-controls :is(button, a) { min-height: 44px; padding: 8px 12px; }
+}
 @media (max-width: 1050px) {
   #topnav .pillbar { grid-template-columns: auto minmax(0, 1fr); }
   #topnav .center { display: none; }
