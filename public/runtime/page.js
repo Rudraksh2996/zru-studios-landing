@@ -18,7 +18,7 @@
     window.VHS = machine
       ? { speed: .75, switching: .09, switchingHeight: .035, acBeat: 1.4, grain: .22, scanlines: .5, jitter: .4 }
       : { speed: .5, switching: .05, switchingHeight: .02, acBeat: 1, grain: .1, scanlines: .1, jitter: .25 };
-    if (machine && !plain && !crt) { try { crt = window.ThreeUICrt.mountCrt(document.getElementById('crt-host'), { variant: 'terminal', speed: 1, typeSpeed: 14, motion: 1, hue: 0, saturation: 1, brightness: 1, opacity: 1, fixedFont: 17, colors: ORANGE, styleOverrides: SOFT_CRT }, STUDIO_LOG); } catch (e) { console.warn('CRT unavailable', e); } }
+    if (machine && !plain && !crt) { try { crt = window.ThreeUICrt.mountCrt(document.getElementById('crt-host'), { variant: 'terminal', speed: 1, typeSpeed: 14, motion: 1, hue: 0, saturation: 1, brightness: 1, opacity: 1, fixedFont: 17, colors: ORANGE, styleOverrides: SOFT_CRT }, STUDIO_LOG.map(([text, color]) => [seg(text, color)])); } catch (e) { document.body.classList.add('machine-plain'); console.warn('CRT unavailable; using readable studio index', e); } }
     if (!machine && crt) { crt.destroy(); crt = null; }
     term.setAttribute('aria-pressed', String(machine));
     type(machine ? 'machine view · esc' : STATUS[si]);
